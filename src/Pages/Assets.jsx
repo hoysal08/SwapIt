@@ -4,6 +4,7 @@ import { useNetwork ,useAccount, useFeeData} from "wagmi";
 import { Box, Flex } from "@chakra-ui/react";
 import NftCard from "../Components/NftCard";
 import NftCardHolder from "../Components/NftCardHolder";
+import NoNfts from "../Components/NoNfts";
 
 function Assets() {
 
@@ -82,7 +83,9 @@ function Assets() {
     <Box backgroundColor="#ECC9EE">
       <Flex direction="column">
         {
-          regroupednft && regroupednft.map((nftarr)=><NftCardHolder nftarray={nftarr}/>)
+          regroupednft?.length>0? (regroupednft.map((nftarr)=><NftCardHolder nftarray={nftarr}/>))
+          :
+          (<NoNfts/>)
         }
            
     </Flex>  
