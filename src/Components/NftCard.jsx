@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Flex, Image } from "@chakra-ui/react";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Badge, Box, Button, Flex, Image, Input, Text, useDisclosure } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import img_error from "../Assets/img_error.png";
  import{useDebounce} from "usehooks-ts"
@@ -33,6 +33,7 @@ function NftCard({ NFTobj }) {
 
   const [approved, setapproved] = useState(false);
   const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
+  const [description, setdescription] = useState("")
   const debouncedContractaddress=useDebounce(contractaddress,5000);
 
   function getcontractaddress() {
@@ -54,18 +55,23 @@ function NftCard({ NFTobj }) {
     onSuccess(data) {
         setapproved(data)
       },
-  })
+  });
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = React.useRef()
 
 
   const { config:createswapconfig } = usePrepareContractWrite({
     address: `${ethers.utils.getAddress(contractaddress)}`,
     abi: abi,
     functionName: "createSwap",
-    args: [[ethers.utils.getAddress(NFTobj?.contract.address)],[ NFTobj?.tokenId]],
+    args: [[ethers.utils.getAddress(NFTobj?.contract.address)],[ NFTobj?.tokenId],description],
+    enabled: Boolean(description)
   });
+  const{write:createswapwrite}=useContractWrite(createswapconfig)
   
   function createnewswap() {
-
+    createswapwrite?.()
   }
 
   const { config:approveconfig } = usePrepareContractWrite({
@@ -149,12 +155,44 @@ function NftCard({ NFTobj }) {
               variant="outline"
               colorScheme="#E384FF"
               onClick={() => {
-                approved ? createnewswap() : getapproval();
+                approved ? onOpen() : getapproval();
               }}
             >
               {approved ? "Open Swap" : "Approve "}
             </Button>
           </Flex>
+
+          <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay >
+          <AlertDialogContent color="#E384FF" backgroundColor="#191825">
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Add description and confirm Swap
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              <Input value={description} onChange={(e)=>setdescription(e.target.value)} placeholder="Looking for BAYC" _placeholder={{ opacity: 0.4, color: 'white' }} />
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose} >
+                <Text opacity="0.8" color='black'>
+                    Cancel
+                </Text>
+                
+              </Button>
+              <Button backgroundColor="#E384FF" onClick={createnewswap} ml={3}>
+              <Text opacity="0.8" color='black'>
+                    Confirm
+                </Text>
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
         </Box>
       </Box>
     </div>
