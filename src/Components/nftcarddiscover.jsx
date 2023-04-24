@@ -2,7 +2,7 @@ import { Badge, Box, Button, Flex, Image } from '@chakra-ui/react'
 import React from 'react'
 import img_error from "../Assets/img_error.png"
 
-function NftCard({NFTobj}) {
+function nftcarddiscover({NFTobj}) {
     console.log(NFTobj)
 
     function formatcontractaddress(address){
@@ -39,7 +39,7 @@ function NftCard({NFTobj}) {
           {NFTobj?.contract?.name || "Untitled" } &bull; {NFTobj?.contract?.symbol || "Untitled" }
         </Box>
         <Flex direction="column"  >
-        <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF">{}</Button>
+        <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF">Swap</Button>
         <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF">Connect</Button>
         </Flex>
          </Box>
@@ -49,4 +49,4 @@ function NftCard({NFTobj}) {
   //description
 }
 
-export default NftCard
+export default nftcarddiscover

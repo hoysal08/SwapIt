@@ -80,7 +80,7 @@ function Assets() {
   
   return (
   <div >
-    <Box backgroundColor="#ECC9EE">
+    <Box backgroundColor="#ECC9EE" pt="3%">
       <Flex direction="column">
         {
           regroupednft?.length>0? (regroupednft.map((nftarr)=><NftCardHolder nftarray={nftarr}/>))
