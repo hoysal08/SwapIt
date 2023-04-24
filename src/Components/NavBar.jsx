@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom'
 function NavBar() {
  
   const navigate=useNavigate()
-
   return (
     <div>
         <Flex px="2%" w="100vw" height={["12vh"]} backgroundColor="#191825" direction="row" align="center" justify="space-between">
@@ -15,9 +14,9 @@ function NavBar() {
           </Box>
           <Box w="40vw">
           <Flex direction="row"  align="center" justifyContent="space-evenly">
-                <Text color="#E384FF" as='samp' fontSize="xl" _hover={{ color:"#E384CF",cursor:"pointer" }} onClick={()=>{navigate("/swaps")}}>Open-Swaps</Text> 
-                <Text color="#E384FF" as='samp' fontSize="xl" _hover={{ color:"#E384CF",cursor:"pointer" }} onClick={()=>{navigate("/discover")}}>Discover</Text>
-                <Text color="#E384FF" as='samp' fontSize="xl" _hover={{ color:"#E384CF",cursor:"pointer" }} onClick={()=>{navigate("/myassets")}}>Your assets</Text>
+                <Text color="#E384FF" as={window.location.pathname==="/swaps"?'b':'samp'} fontSize="xl" _hover={{ color:"#E384CF",cursor:"pointer" }}  onClick={()=>{navigate("/swaps")}}>Open-Swaps</Text> 
+                <Text color="#E384FF" as={window.location.pathname==="/discover"?'b':'samp'} fontSize="xl" _hover={{ color:"#E384CF",cursor:"pointer" }} onClick={()=>{navigate("/discover")}}>Discover</Text>
+                <Text color="#E384FF" as={window.location.pathname==="/myassets"?'b':'samp'} fontSize="xl" _hover={{ color:"#E384CF",cursor:"pointer" }} onClick={()=>{navigate("/myassets")}}>Your assets</Text>
           </Flex>
           </Box>
           <Box >

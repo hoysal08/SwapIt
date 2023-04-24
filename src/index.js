@@ -7,14 +7,14 @@ import {
   getDefaultWallets,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
-import { configureChains, createClient, goerli, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, goerli, sepolia, WagmiConfig } from 'wagmi';
 import { mainnet, polygon, polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { ChakraProvider, VisuallyHidden } from '@chakra-ui/react'
 
 const { chains, provider } = configureChains(
-  [goerli,polygonMumbai,mainnet, polygon],
+  [polygonMumbai,sepolia],//,mainnet, polygon
   [
     publicProvider()
   ]

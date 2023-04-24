@@ -18,12 +18,9 @@ function Assets() {
     let alchemy;
     let settings;
 
-    
-
       const fetchNftss=async()=>{
         let res=await alchemy.nft.getNftsForOwner(address)
         res=res?.ownedNfts
-        console.log(res)
         setNftdata(res)
     }
 
@@ -41,28 +38,25 @@ function Assets() {
     
     
     useEffect(() => {
-     settings = {
-      apiKey: process.env.REACT_APP_ALCHEMY_ID,
-      network: Network.ETH_GOERLI,
-    };
-    if (chain.id === 1) {
+     
+    // if (chain.id === 1) {
+    //     settings = {
+    //         apiKey: process.env.ALCHEMY_ID,
+    //         network: Network.ETH_MAINNET,
+    //       };
+    // }
+    if (chain.id === 11155111) {
         settings = {
             apiKey: process.env.ALCHEMY_ID,
-            network: Network.ETH_MAINNET,
+            network: Network.ETH_SEPOLIA,
           };
     }
-    if (chain.id === 5) {
-        settings = {
-            apiKey: process.env.ALCHEMY_ID,
-            network: Network.ETH_GOERLI,
-          };
-    }
-    if (chain.id === 137) {
-        settings = {
-            apiKey: process.env.ALCHEMY_ID,
-            network: Network.MATIC_MAINNET,
-          };
-    }
+    // if (chain.id === 137) {
+    //     settings = {
+    //         apiKey: process.env.ALCHEMY_ID,
+    //         network: Network.MATIC_MAINNET,
+    //       };
+    // }
     if (chain.id === 80001) {
         settings = {
             apiKey: process.env.ALCHEMY_ID,
@@ -80,10 +74,10 @@ function Assets() {
   
   return (
   <div >
-    <Box backgroundColor="#ECC9EE" pt="3%">
+    <Box backgroundColor="#ECC9EE" pt="3%" h="100vh">
       <Flex direction="column">
         {
-          regroupednft?.length>0? (regroupednft.map((nftarr)=><NftCardHolder nftarray={nftarr}/>))
+          regroupednft?.length>0? (regroupednft.map((nftarr,i)=><NftCardHolder key={i} nftarray={nftarr}/>))
           :
           (<NoNfts/>)
         }

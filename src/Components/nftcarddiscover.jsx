@@ -3,7 +3,6 @@ import React from 'react'
 import img_error from "../Assets/img_error.png"
 
 function nftcarddiscover({NFTobj}) {
-    console.log(NFTobj)
 
     function formatcontractaddress(address){
       return  NFTobj?.contract.address.substring(0,4)+"...."+NFTobj?.contract.address.slice(-4)
