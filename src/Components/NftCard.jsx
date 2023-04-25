@@ -12,19 +12,22 @@ import {
   usePrepareContractWrite,
   useSigner,
 } from "wagmi";
+
 import {
   abi,
   swapaddressethtestnet,
   swapaddresspolytestnet,
 } from "../Constants";
+
 import { ethers } from "ethers";
 
 function NftCard({ NFTobj }) {
-  function formatcontractaddress(address) {
+
+  function formatcontractaddress(addr) {
     return (
-      NFTobj?.contract.address.substring(0, 4) +
+      addr.substring(0, 4) +
       "...." +
-      NFTobj?.contract.address.slice(-4)
+      addr.slice(-4)
     );
   }
 
