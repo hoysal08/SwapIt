@@ -75,6 +75,7 @@ function NftCard({ NFTobj }) {
   
   function createnewswap() {
     createswapwrite?.()
+    onClose()
   }
 
   const { config:approveconfig } = usePrepareContractWrite({
