@@ -5,6 +5,7 @@ import { useContractRead, useNetwork, useSigner } from 'wagmi';
 import { abi, swapaddressethtestnet, swapaddresspolytestnet } from '../Constants';
 import { ethers } from 'ethers';
 import GetSwap from '../utils/GetSwap';
+import GetSwapHolder from '../Components/GetSwapHolder';
 
 function Discover() {
 
@@ -13,7 +14,7 @@ function Discover() {
   const { signer } = useSigner();
 
   const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
-  const[totalswaps,settotalswaps] = useState();
+  const[totalswaps,settotalswaps] = useState(10);
   const[swapIndexarr,setswapindexarr] = useState([])
   const [NFTdata,setNftdata]=useState();
   const [regroupednft,setregroupednft]=useState([]);
@@ -41,43 +42,41 @@ function Discover() {
   }, [chain]);
 
 
-  const {data}=useContractRead({
-    address:ethers.utils.getAddress(contractaddress),
-    abi:abi,
-    functionName:'swapCount',
-    chainId:chain.id,
-    enabled:Boolean(contractaddress),
-    onSuccess(data) {
-        console.log(data.toNumber())
-        settotalswaps(data.toNumber())
-      },
-  });
+  // const {data}=useContractRead({
+  //   address:ethers.utils.getAddress(contractaddress),
+  //   abi:abi,
+  //   functionName:'swapCount',
+  //   chainId:chain.id,
+  //   enabled:Boolean(contractaddress),
+  //   onSuccess(data) {
+  //       settotalswaps(data.toNumber())
+  //     },
+  // });
 
-  const {openswapsdata}=useContractRead({
-    address:ethers.utils.getAddress(contractaddress),
-    abi:abi,
-    functionName:'swapCount',
-    chainId:chain.id,
-    enabled:Boolean(contractaddress),
-    onSuccess(openswapsdata) {
-        console.log(data)
-      },
-  });
-
-
-  function FetchOpenSwaps(props){
-     setswapindexarr(Array.from(Array(totalswaps).keys()))
-  }
+  const groupnftdata=()=>{
+    let group = [];
+    const n=3;
+    for (let i = 0, j = 0; i < swapIndexarr?.length; i++) {
+        if (i >= n && i % n === 0)
+            j++;
+        group[j] = group[j] || [];
+        group[j].push(swapIndexarr[i])
+    }
+    setregroupednft(group)
+}
+ 
 
   useEffect(()=>{
     setswapindexarr(Array.from(Array(totalswaps).keys()))
-
   },[totalswaps])
 
 
   useEffect(()=>{
-    console.log(swapIndexarr)
+    groupnftdata()
   },[swapIndexarr])
+
+  useEffect(()=>{
+  },[regroupednft])
 
   return (
     <div >
@@ -89,10 +88,8 @@ function Discover() {
         }
 
         {
-          swapIndexarr && swapIndexarr.map((e,i)=><GetSwap props={e}/>)
+          regroupednft && regroupednft.map((e,i)=><GetSwapHolder key={i} props={e}/>)
         }
-        
-        
            
     </Flex>  
     </Box>

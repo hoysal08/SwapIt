@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 
 function GetSwap(props) {
     props=props.props
-    console.log(props)
+    
     const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
     const { chain } = useNetwork();
 
