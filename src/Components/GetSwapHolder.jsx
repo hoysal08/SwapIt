@@ -1,12 +1,17 @@
-import React from 'react'
-import GetSwap from '../utils/GetSwap'
+import React from "react";
+import GetSwap from "../utils/GetSwap";
+import { Flex } from "@chakra-ui/react";
 
-function GetSwapHolder({props}) {     
-     return(
-        <div>{
-        props.map((e,i)=><GetSwap key={i} props={e}/>)}
-            </div>
-     )
+function GetSwapHolder({ props }) {
+  return (
+    <div>
+      <Flex direction="row" justify="space-evenly" m="15">
+        {props.map((e, i) => (
+          <GetSwap key={i} props={e} />
+        ))}
+      </Flex>
+    </div>
+  );
 }
 
-export default GetSwapHolder
+export default GetSwapHolder;

@@ -14,7 +14,7 @@ function Discover() {
   const { signer } = useSigner();
 
   const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
-  const[totalswaps,settotalswaps] = useState(10);
+  const[totalswaps,settotalswaps] = useState();
   const[swapIndexarr,setswapindexarr] = useState([])
   const [NFTdata,setNftdata]=useState();
   const [regroupednft,setregroupednft]=useState([]);
@@ -42,16 +42,16 @@ function Discover() {
   }, [chain]);
 
 
-  // const {data}=useContractRead({
-  //   address:ethers.utils.getAddress(contractaddress),
-  //   abi:abi,
-  //   functionName:'swapCount',
-  //   chainId:chain.id,
-  //   enabled:Boolean(contractaddress),
-  //   onSuccess(data) {
-  //       settotalswaps(data.toNumber())
-  //     },
-  // });
+  const {data}=useContractRead({
+    address:ethers.utils.getAddress(contractaddress),
+    abi:abi,
+    functionName:'swapCount',
+    chainId:chain.id,
+    enabled:Boolean(contractaddress),
+    onSuccess(data) {
+        settotalswaps(data.toNumber())
+      },
+  });
 
   const groupnftdata=()=>{
     let group = [];
@@ -80,15 +80,10 @@ function Discover() {
 
   return (
     <div >
-    <Box backgroundColor="#ECC9EE" pt="3%" h={"100%"}>
+    <Box backgroundColor="#ECC9EE" pt="3%" h={regroupednft.length<2?"100vh":"100%"}>
       <Flex direction="column">
         {
-          
-          (<NoNfts/>)
-        }
-
-        {
-          regroupednft && regroupednft.map((e,i)=><GetSwapHolder key={i} props={e}/>)
+          regroupednft.length>0 ? (regroupednft.map((e,i)=><GetSwapHolder key={i} props={e}/>)):<NoNfts/>
         }
            
     </Flex>  
