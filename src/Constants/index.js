@@ -1,4 +1,5 @@
-export const swapaddresspolytestnet="0x49d1690d02374D5B96CBE9c4ea5725AAc0CE27c8" //mumbai
+//0x49d1690d02374D5B96CBE9c4ea5725AAc0CE27c8 -old mumbai contract
+export const swapaddresspolytestnet="0xF598535f500029B0496e562CDD39c8B7eE95C494" //mumbai
 export const 
 //0xD21EE90Cdf1A47dE77fa9007C715745982A89EB5 - old marketplace contract
 swapaddressethtestnet="0x5015Ea6d83cb7D076Bce9f61066B602696855C17" //sepolia

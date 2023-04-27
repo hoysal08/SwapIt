@@ -6,8 +6,10 @@ import NftCard from "../Components/NftCard";
 import NftCardHolder from "../Components/NftCardHolder";
 import NoNfts from "../Components/NoNfts";
 
-function Assets() {
-
+function Assets(props) {
+ let discoverpage=props?.discover
+ let swapid=props?.swapId
+    
     const { chain } = useNetwork();
     const { address } = useAccount();
 
@@ -45,7 +47,7 @@ function Assets() {
     //         network: Network.ETH_MAINNET,
     //       };
     // }
-    if (chain.id === 11155111) {
+    if (chain?.id === 11155111) {
         settings = {
             apiKey: process.env.ALCHEMY_ID,
             network: Network.ETH_SEPOLIA,
@@ -57,9 +59,9 @@ function Assets() {
     //         network: Network.MATIC_MAINNET,
     //       };
     // }
-    if (chain.id === 80001) {
+    if (chain?.id === 80001) {
         settings = {
-            apiKey: process.env.ALCHEMY_ID,
+            apiKey: process.env.REACT_APP_ALCHEMY_ID_POLY,
             network: Network.MATIC_MUMBAI,
           };
     }
@@ -77,9 +79,9 @@ function Assets() {
     <Box backgroundColor="#ECC9EE" pt="3%" h={NFTdata?.length>3?"100%":"100vh"}>
       <Flex direction="column">
         {
-          regroupednft?.length>0? (regroupednft.map((nftarr,i)=><NftCardHolder key={i} nftarray={nftarr}/>))
+          regroupednft?.length>0? (regroupednft.map((nftarr,i)=><NftCardHolder key={i} nftarray={nftarr} discover={discoverpage} swapId={swapid} />))
           :
-          (<NoNfts/>)
+          (<NoNfts discover={discoverpage} />)
         }
            
     </Flex>  

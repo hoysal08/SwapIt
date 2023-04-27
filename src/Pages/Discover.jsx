@@ -15,18 +15,20 @@ function Discover() {
 
   const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
   const[totalswaps,settotalswaps] = useState();
+  const[correctcntaddress, setcorrectcntaddress] = useState(false);
   const[swapIndexarr,setswapindexarr] = useState([])
   const [NFTdata,setNftdata]=useState();
   const [regroupednft,setregroupednft]=useState([]);
 
 
   function getcontractaddress() {
-    if (chain.id === 11155111) {
+    if (chain?.id === 11155111) {
       setcontractaddress(ethers.utils.getAddress(swapaddressethtestnet));
     }
-    if (chain.id === 80001) {
+    if (chain?.id === 80001) {
       setcontractaddress(ethers.utils.getAddress(swapaddresspolytestnet));
     }
+    setcorrectcntaddress(true)
   }
 
   function formatcontractaddress(addr) {
@@ -46,8 +48,8 @@ function Discover() {
     address:ethers.utils.getAddress(contractaddress),
     abi:abi,
     functionName:'swapCount',
-    chainId:chain.id,
-    enabled:Boolean(contractaddress),
+    chainId:chain?.id,
+    enabled:Boolean(correctcntaddress),
     onSuccess(data) {
         settotalswaps(data.toNumber())
       },
@@ -83,7 +85,7 @@ function Discover() {
     <Box backgroundColor="#ECC9EE" pt="3%" h={regroupednft.length<2?"100vh":"100%"}>
       <Flex direction="column">
         {
-          regroupednft.length>0 ? (regroupednft.map((e,i)=><GetSwapHolder key={i} props={e}/>)):<NoNfts/>
+          regroupednft ? (regroupednft.map((e,i)=><GetSwapHolder key={i} props={e}/>)):<NoNfts/>
         }
            
     </Flex>  

@@ -1,10 +1,13 @@
 import { useContractRead, useNetwork } from "wagmi";
 import React, { useEffect, useState } from 'react'
-import { abi, swapaddressethtestnet } from "../Constants";
+import { abi, swapaddressethtestnet, swapaddresspolytestnet } from "../Constants";
 import { ethers } from "ethers";
 import { Badge, Box, Button, Flex, Image } from "@chakra-ui/react";
 import img_error from "../Assets/img_error.png";
 import { Alchemy, Network } from "alchemy-sdk";
+import {  Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react'
+import Assets from "../Pages/Assets";
+
 
 function GetSwap(props) {
     props=props.props
@@ -12,14 +15,16 @@ function GetSwap(props) {
     const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
     const [nftobj,setnftobj]=useState();
     const [nfttokenaddresses,setnfttokenaddresses] = useState();
+    const[correctcntaddress, setcorrectcntaddress] = useState(false);
     const[nftokenId,setnfttokenid] = useState();
     const[NftMetadata,setNftMetadata]=useState();
+    const[alchemy,setalchemy] = useState();
 
     const { chain } = useNetwork();
 
     let settings;
-    let alchemy;
 
+    
     useEffect(() => {
    
       // if (chain.id === 1) {
@@ -28,7 +33,8 @@ function GetSwap(props) {
       //         network: Network.ETH_MAINNET,
       //       };
       // }
-      if (chain.id === 11155111) {
+      if (chain?.id === 11155111) {
+        setcontractaddress(swapaddressethtestnet)
           settings = {
               apiKey: process.env.ALCHEMY_ID,
               network: Network.ETH_SEPOLIA,
@@ -40,23 +46,28 @@ function GetSwap(props) {
       //         network: Network.MATIC_MAINNET,
       //       };
       // }
-      if (chain.id === 80001) {
+      if (chain?.id === 80001) {
+        setcontractaddress(swapaddresspolytestnet)
           settings = {
-              apiKey: process.env.ALCHEMY_ID,
+              apiKey: process.env.REACT_APP_ALCHEMY_ID_POLY,
               network: Network.MATIC_MUMBAI,
             };
       }
-      alchemy=new Alchemy(settings);
+     setalchemy(new Alchemy(settings))
+     setcorrectcntaddress(true)
+      console.log(settings)
       fetchmetadata()
     }, [chain,nftokenId,nfttokenaddresses]);
+
+
 
     const {data}=useContractRead({
         address:ethers.utils.getAddress(contractaddress),
         abi:abi,
         functionName:'swaps',
         args:[props],
-        chainId:chain.id,
-        enabled:Boolean(contractaddress),
+        chainId:chain?.id,
+        enabled:Boolean(correctcntaddress),
         onSuccess(data) {
             setnftobj(data);
           },
@@ -67,8 +78,8 @@ function GetSwap(props) {
         abi:abi,
         functionName:'getCSwapTokenAddress',
         args:[props,0],
-        chainId:chain.id,
-        enabled:Boolean(contractaddress),
+        chainId:chain?.id,
+        enabled:Boolean(correctcntaddress),
         onSuccess(addressdata) {
             console.log(addressdata);
             setnfttokenaddresses(addressdata)
@@ -80,8 +91,8 @@ function GetSwap(props) {
         abi:abi,
         functionName:'getCSwapTokenId',
         args:[props,0],
-        chainId:chain.id,
-        enabled:Boolean(contractaddress),
+        chainId:chain?.id,
+        enabled:Boolean(correctcntaddress),
         onSuccess(tokenIddata) {
             console.log(tokenIddata.toNumber());
             setnfttokenid(tokenIddata.toNumber());
@@ -111,15 +122,20 @@ function GetSwap(props) {
         }
       }
 
-    //   useEffect(()=>{
-    //      fetchmetadata();  
-    //   },[nftokenId,nfttokenaddresses,alchemy]);
+      const  { isOpen, onOpen, onClose } = useDisclosure()
+      const btnRef = React.useRef(null)
+      function NFTModal() {
+
+      return (
+        <div></div>
+      )
+    }
 
 
        return (
         <div>
         <Box maxW="sm" minH="lg"  borderWidth='3px' borderRadius='2xl' boxShadow="dark-lg" overflow='hidden' boxSize="sm" my="1%" backgroundColor="#191825"> 
-         <Image boxSize="xs" ml="6%" pl="3%" my="2%"  src={NftMetadata?.tokenUri.gateway || NftMetadata?.tokenUri.raw || img_error} alt={"NFT image"} />
+         <Image boxSize="xs" ml="6%" pl="3%" my="2%" pt="2%" src={NftMetadata?.tokenUri?.gateway  || NftMetadata?.media[0]?.gateway||NftMetadata?.media[0]?.thumbnail|| img_error} alt={"NFT image"} />
          <Box px='6' py='2' >
             <Box display='flex' justifyContent="space-between">
             <Badge borderRadius='full' px='2' colorScheme="orange">
@@ -147,11 +163,33 @@ function GetSwap(props) {
           {NftMetadata?.contract?.name || "Untitled" } &bull; {NftMetadata?.contract?.symbol || "Untitled" }
         </Box>
         <Flex direction="column"  >
-        <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF">Offer-Swap</Button>
+        <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={onOpen}>Offer-Swap</Button>
         <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF">Connect</Button>
         </Flex>
          </Box>
         </Box>
+        <div>
+            <Modal
+            onClose={onClose}
+            finalFocusRef={btnRef}
+            isOpen={isOpen}
+            scrollBehavior={'outside'}
+            size="6xl"
+          >
+            <ModalOverlay bg='blackAlpha.300'
+      backdropFilter='blur(10px) hue-rotate(10deg)'/>
+            <ModalContent>
+              <ModalHeader>Pick your NFT to swap</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Assets discover={true} swapId={props}/>
+              </ModalBody>
+              <ModalFooter>
+                <Button onClick={onClose}>Close</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </div>
     </div>
        )
 }

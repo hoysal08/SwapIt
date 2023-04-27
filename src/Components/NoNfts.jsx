@@ -2,10 +2,11 @@ import { Box, Icon, Text } from '@chakra-ui/react'
 import React from 'react'
 import {WarningTwoIcon} from "@chakra-ui/icons"
 
-function NoNfts() {
+function NoNfts(props) {
+ let discoverpage=props.discover
   return (
     <div >
-        <Box minH="100vh" align="center" pt="10%" minW="100vw">
+        <Box minH={discoverpage?"50vh":"100vh"} align="center" pt="10%" minW={discoverpage?"50vw":"100vw"}>
                  <Text fontSize="5xl" as='samp'>
                     No Cool NFT's here
                  </Text>
