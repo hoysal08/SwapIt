@@ -11,7 +11,7 @@ function App() {
   
   const{address}=useAccount();
   return (
-    <div className="App" style={{overflowX:'hidden'}}>
+    <div className="App" style={{overflowX:'hidden',overflowY:'hidden'}}>
       <BrowserRouter>
       <NavBar/>
       {address ? (<Routes>
@@ -19,7 +19,6 @@ function App() {
         <Route exact path="/myassets" element={<Assets/>}/>
         <Route exact path="/swaps" element={<Swaps/>}/>
       </Routes>):(<Fallback/>)}
-      
       </BrowserRouter>
     </div>
   );

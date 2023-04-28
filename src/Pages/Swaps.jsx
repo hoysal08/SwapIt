@@ -9,6 +9,7 @@ import {
 } from "../Constants";
 import { ethers } from "ethers";
 import SwapCard from "../Components/SwapCard";
+import NoNfts from "../Components/NoNfts";
 
 function Swaps() {
   const { chain } = useNetwork();
@@ -145,11 +146,15 @@ function Swaps() {
     <div>
       <Box backgroundColor="#ECC9EE" pt="2%" h={valuesarr.length>1?"100%":"100vh"}>
         {
-          valuesarr.length>0 && keyarray.map((val,index)=>{
+          valuesarr.length>0 ?
+          
+         (keyarray.map((val,index)=>{
            return (
            <SwapCard key={index} swapId={val} NFTobj={valuesarr[index]}/>
            )
-           })
+           }))
+           :
+           <NoNfts/>
         }
       </Box>
     </div>
