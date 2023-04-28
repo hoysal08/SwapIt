@@ -45,7 +45,6 @@ function nftcarddiscover({NFTobj}) {
         </Box>
     </div>
   )
-  //description
 }
 
 export default nftcarddiscover

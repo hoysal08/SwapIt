@@ -8,6 +8,7 @@ import {
   swapaddresspolytestnet,
 } from "../Constants";
 import { ethers } from "ethers";
+import SwapCard from "../Components/SwapCard";
 
 function Swaps() {
   const { chain } = useNetwork();
@@ -82,9 +83,9 @@ function Swaps() {
       };
       res[swapId] = {
         ...res[swapId],
-        tokenId: await contract.getOSwapTokenAddress(swapId, 0),
+        tokenId: (await contract.getOSwapTokenId(swapId, 0)).toNumber(),
       };
-      console.log(res);
+      // console.log(res);
        offeredswaps.set(swapId, res[swapId]);
       setofferedswaps(offeredswaps.set(swapId,res[swapId]))
     } catch (err) {
@@ -93,13 +94,16 @@ function Swaps() {
   }
 
   function connvertintoarrs(){
+    console.log(keyarray)
     if(valuesarr.length<openswapcount && keyarray.length<openswapcount){
           offeredswaps.forEach((value,key)=>{
-          setkeyarray(keyarray=>[...keyarray,key]);
-          setvaluesarr(valuesarr=>[...valuesarr,value]);
+            console.log(key)
+             if(keyarray.indexOf(key)===-1){
+              setkeyarray(keyarray=>[...keyarray,key]);
+              setvaluesarr(valuesarr=>[...valuesarr,value]);
+             }
     })
     }
-
   }
 
   function getcontractaddress() {
@@ -111,8 +115,6 @@ function Swaps() {
     }
     setcorrectcntaddres(true);
   }
-
-  let test= `<h1>hello by h1</h1>`
 
   useEffect(() => {
     getcontractaddress();
@@ -131,17 +133,24 @@ function Swaps() {
   }, [offeredswaps]);
 
 
+  useEffect(()=>{
+    // console.log("here")
+    if(keyarray.length<openswapcount){
+      connvertintoarrs()
+    }
+  },[keyarray])
+
+ connvertintoarrs()
   return (
     <div>
-      <Box backgroundColor="#ECC9EE" h="100vh">
+      <Box backgroundColor="#ECC9EE" pt="2%" h={valuesarr.length>1?"100%":"100vh"}>
         {
-           keyarray.map((val,index)=>{
+          valuesarr.length>0 && keyarray.map((val,index)=>{
            return (
-           <Text>Texttesting</Text>
+           <SwapCard key={index} swapId={val} NFTobj={valuesarr[index]}/>
            )
            })
         }
-        <h1>hello</h1>
       </Box>
     </div>
   );
