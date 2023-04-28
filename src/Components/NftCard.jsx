@@ -1,10 +1,25 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Badge, Box, Button, Flex, Image, Input, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Badge,
+  Box,
+  Button,
+  Flex,
+  Image,
+  Input,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import img_error from "../Assets/img_error.png";
- import{useDebounce} from "usehooks-ts"
+import { useDebounce } from "usehooks-ts";
 
 import {
-    Context,
+  Context,
   erc721ABI,
   useContractRead,
   useContractWrite,
@@ -22,80 +37,90 @@ import {
 import { ethers } from "ethers";
 
 function NftCard(props) {
- let NFTobj=props?.NFTobj
- let discoverpage=props?.discover
- let swapid=props?.swapId
-
-
- console.log(discoverpage)
+  let NFTobj = props?.NFTobj;
+  let discoverpage = props?.discover;
+  let swapid = props?.swapId;
 
 
   function formatcontractaddress(addr) {
-    return (
-      addr.substring(0, 4) +
-      "...." +
-      addr.slice(-4)
-    );
+    return addr.substring(0, 4) + "...." + addr.slice(-4);
   }
 
   const { chain } = useNetwork();
-  
+  const { signer } = useSigner();
 
   const [approved, setapproved] = useState(false);
-  const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
-  const [description, setdescription] = useState("")
-  const[correctcntaddress, setcorrectcntaddress] = useState(false);
-  const debouncedContractaddress=useDebounce(contractaddress,5000);
+  const [contractaddress, setcontractaddress] = useState();
+  const [description, setdescription] = useState("");
+  const [correctcntaddress, setcorrectcntaddress] = useState(false);
+  const debouncedContractaddress = useDebounce(contractaddress, 5000);
 
+  function delay(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
   function getcontractaddress() {
-    if (chain?.id === 11155111) {
-      setcontractaddress(ethers.utils.getAddress(swapaddressethtestnet));
-    }
-    if (chain?.id === 80001) {
-      setcontractaddress(ethers.utils.getAddress(swapaddresspolytestnet));
-    }
-    setcorrectcntaddress(true)
+   
+      if (chain.id === 11155111) {
+        setcontractaddress(ethers.utils.getAddress(swapaddressethtestnet));
+      }
+      if (chain.id === 80001) {
+        setcontractaddress(ethers.utils.getAddress(swapaddresspolytestnet));
+      }
+      // setcorrectcntaddress(true);
+    
+    delay(1000).then(() => {setcorrectcntaddress(true);});
   }
 
-  const {data}=useContractRead({
-    address:ethers.utils.getAddress(contractaddress),
-    abi:abi,
-    functionName:'isApprovedfunc',
-    args:[ethers.utils.getAddress(NFTobj?.contract.address),parseInt(NFTobj?.tokenId)],
-    chainId:chain?.id,
-    enabled:Boolean(correctcntaddress),
+  const { data } = useContractRead({
+    address: contractaddress,
+    abi: abi,
+    functionName: "isApprovedfunc",
+    args: [
+      ethers.utils.getAddress(NFTobj?.contract.address),
+      parseInt(NFTobj?.tokenId),
+    ],
+    chainId: chain?.id,
+    enabled: Boolean(correctcntaddress),
     onSuccess(data) {
-        setapproved(data)
-      },
+      setapproved(data);
+    },
+    onError(err) {
+      setapproved(false)
+    },
   });
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const cancelRef = React.useRef()
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
 
-  const { config:createswapconfig } = usePrepareContractWrite({
-    address: `${ethers.utils.getAddress(contractaddress)}`,
+  const { config: createswapconfig } = usePrepareContractWrite({
+    address: contractaddress,
     abi: abi,
     functionName: "createSwap",
-    args: [[ethers.utils.getAddress(NFTobj?.contract.address)],[ NFTobj?.tokenId],description],
-    enabled: Boolean(description && correctcntaddress)
+    args: [
+      [ethers.utils.getAddress(NFTobj?.contract.address)],
+      [NFTobj?.tokenId],
+      description,
+    ],
+    enabled: Boolean(correctcntaddress),
+    
   });
-  const{write:createswapwrite}=useContractWrite(createswapconfig)
-  
+  const { write: createswapwrite } = useContractWrite(createswapconfig);
+
   function createnewswap() {
-    createswapwrite?.()
-    onClose()
+    createswapwrite?.();
+    onClose();
   }
 
-  const { config:approveconfig } = usePrepareContractWrite({
-    address: `${ethers.utils.getAddress(NFTobj?.contract?.address)}`,
+  const { config: approveconfig } = usePrepareContractWrite({
+    address: NFTobj?.contract?.address,
     abi: erc721ABI,
     functionName: "approve",
-    args: [debouncedContractaddress, NFTobj?.tokenId],
-    enabled:Boolean(correctcntaddress)
+    args: [contractaddress, NFTobj?.tokenId],
+    enabled: Boolean(correctcntaddress && contractaddress && NFTobj),
   });
 
-  const { write:approvewrite } = useContractWrite(approveconfig);
+  const { write: approvewrite } = useContractWrite(approveconfig);
 
   async function getapproval() {
     approvewrite?.();
@@ -105,38 +130,39 @@ function NftCard(props) {
     getcontractaddress();
   }, [chain]);
 
-  const { config:offerswapConfig } = usePrepareContractWrite({
-    address: `${ethers.utils.getAddress(contractaddress)}`,
+
+  const { config: offerswapConfig } = usePrepareContractWrite({
+    address: contractaddress,
     abi: abi,
     functionName: "proposeOffer",
-    args: [swapid,[ethers.utils.getAddress(NFTobj?.contract.address)],[ NFTobj?.tokenId]],
-    enabled: Boolean(swapid!==undefined && correctcntaddress),
+    args: [
+      swapid,
+      [ethers.utils.getAddress(NFTobj?.contract.address)],
+      [NFTobj?.tokenId],
+    ],
+    enabled: Boolean(swapid !== undefined && correctcntaddress),
+    
   });
-  const{write:offerswapwrite}=useContractWrite(offerswapConfig)
-  
+  const { write: offerswapwrite } = useContractWrite(offerswapConfig);
 
-  function handleswapclick(){
-    if(discoverpage){
-         console.log("clicked")
-         console.log(swapid)
-         offerswapwrite?.();
-    }
-    else{
-      onOpen()
+  function handleswapclick() {
+    if (discoverpage) {
+      offerswapwrite?.();
+    } else {
+      onOpen();
     }
   }
-
 
   return (
     <div>
       <Box
         maxW="sm"
-        minH={discoverpage?"md":"lg"}
+        minH={discoverpage ? "md" : "lg"}
         borderWidth="3px"
         borderRadius="2xl"
         boxShadow="dark-lg"
         overflow="hidden"
-        boxSize={discoverpage?"xs":"sm"}
+        boxSize={discoverpage ? "xs" : "sm"}
         my="1%"
         backgroundColor="#191825"
       >
@@ -145,10 +171,8 @@ function NftCard(props) {
           ml="6%"
           pl="3%"
           my="2%"
-          pr={discoverpage?"15%":""}
-          py={discoverpage?"2%":""}
-
-
+          pr={discoverpage ? "15%" : ""}
+          py={discoverpage ? "2%" : ""}
           src={
             NFTobj?.media[0]?.thumbnail ||
             NFTobj?.media[0]?.gateway ||
@@ -166,7 +190,7 @@ function NftCard(props) {
               color="gray.500"
               fontWeight="semibold"
               letterSpacing="wide"
-              fontSize={discoverpage?"2xs":"xs"}
+              fontSize={discoverpage ? "2xs" : "xs"}
               textTransform="uppercase"
               ml="2"
             >
@@ -181,15 +205,15 @@ function NftCard(props) {
             lineHeight="tight"
             noOfLines={1}
             color="gray.500"
-            fontSize={discoverpage?"xs":""}
-            my={discoverpage?"2":"5"}
+            fontSize={discoverpage ? "xs" : ""}
+            my={discoverpage ? "2" : "5"}
           >
             {NFTobj?.contract?.name || "Untitled"} &bull;{" "}
             {NFTobj?.contract?.symbol || "Untitled"}
           </Box>
-          <Flex direction="column" justify="center" >
+          <Flex direction="column" justify="center">
             <Button
-              my={discoverpage?"0":"xs"}
+              my={discoverpage ? "0" : "xs"}
               backgroundColor="#191825"
               color="#E384FF"
               variant="outline"
@@ -203,36 +227,44 @@ function NftCard(props) {
           </Flex>
 
           <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
-        <AlertDialogOverlay >
-          <AlertDialogContent color="#E384FF" backgroundColor="#191825">
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              Add description and confirm Swap
-            </AlertDialogHeader>
+            isOpen={isOpen}
+            leastDestructiveRef={cancelRef}
+            onClose={onClose}
+          >
+            <AlertDialogOverlay>
+              <AlertDialogContent color="#E384FF" backgroundColor="#191825">
+                <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                  Add description and confirm Swap
+                </AlertDialogHeader>
 
-            <AlertDialogBody>
-              <Input value={description} onChange={(e)=>setdescription(e.target.value)} placeholder="Looking for BAYC" _placeholder={{ opacity: 0.4, color: 'white' }} />
-            </AlertDialogBody>
+                <AlertDialogBody>
+                  <Input
+                    value={description}
+                    onChange={(e) => setdescription(e.target.value)}
+                    placeholder="Looking for BAYC"
+                    _placeholder={{ opacity: 0.4, color: "white" }}
+                  />
+                </AlertDialogBody>
 
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose} >
-                <Text opacity="0.8" color='black'>
-                    Cancel
-                </Text>
-                
-              </Button>
-              <Button backgroundColor="#E384FF" onClick={createnewswap} ml={3}>
-              <Text opacity="0.8" color='black'>
-                    Confirm
-                </Text>
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+                <AlertDialogFooter>
+                  <Button ref={cancelRef} onClick={onClose}>
+                    <Text opacity="0.8" color="black">
+                      Cancel
+                    </Text>
+                  </Button>
+                  <Button
+                    backgroundColor="#E384FF"
+                    onClick={createnewswap}
+                    ml={3}
+                  >
+                    <Text opacity="0.8" color="black">
+                      Confirm
+                    </Text>
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialogOverlay>
+          </AlertDialog>
         </Box>
       </Box>
     </div>

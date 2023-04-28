@@ -13,8 +13,9 @@ function Assets(props) {
     const { chain } = useNetwork();
     const { address } = useAccount();
 
-    const [NFTdata,setNftdata]=useState();
+    const [NFTdata,setNftdata]=useState([]);
     const [regroupednft,setregroupednft]=useState([])
+    const[onlyerc721,setonlyerc721]=useState(false);
 
     
     let alchemy;
@@ -26,7 +27,21 @@ function Assets(props) {
         setNftdata(res)
     }
 
+    function fetchonlyerc721(){
+      let onlyerc721arr=[]       
+      if(NFTdata.length>0 && !onlyerc721){
+              for(let i=0;i<NFTdata.length;i++){
+                if(NFTdata[i].tokenType==='ERC721'){
+                  onlyerc721arr.push(NFTdata[i])
+                }
+             }
+            setNftdata(onlyerc721arr);
+            setonlyerc721(true);
+      }
+    }
+
     const groupnftdata=()=>{
+      if(onlyerc721 && NFTdata.length>0){
         let group = [];
         const n=3;
         for (let i = 0, j = 0; i < NFTdata?.length; i++) {
@@ -35,7 +50,8 @@ function Assets(props) {
             group[j] = group[j] || [];
             group[j].push(NFTdata[i])
         }
-        setregroupednft(group)
+        setregroupednft(group);
+      }
     }
     
     
@@ -65,13 +81,20 @@ function Assets(props) {
             network: Network.MATIC_MUMBAI,
           };
     }
+
     alchemy=new Alchemy(settings)
     fetchNftss()
   }, [chain,address]);
 
   useEffect(()=>{
     groupnftdata()
+  },[onlyerc721])
+
+  useEffect(()=>{
+    fetchonlyerc721()
   },[NFTdata])
+
+
   
   
   return (

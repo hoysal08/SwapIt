@@ -55,7 +55,6 @@ function GetSwap(props) {
       }
      setalchemy(new Alchemy(settings))
      setcorrectcntaddress(true)
-      console.log(settings)
       fetchmetadata()
     }, [chain,nftokenId,nfttokenaddresses]);
 
@@ -81,7 +80,6 @@ function GetSwap(props) {
         chainId:chain?.id,
         enabled:Boolean(correctcntaddress),
         onSuccess(addressdata) {
-            console.log(addressdata);
             setnfttokenaddresses(addressdata)
           },
       });
@@ -94,7 +92,6 @@ function GetSwap(props) {
         chainId:chain?.id,
         enabled:Boolean(correctcntaddress),
         onSuccess(tokenIddata) {
-            console.log(tokenIddata.toNumber());
             setnfttokenid(tokenIddata.toNumber());
           },
       });
@@ -112,12 +109,8 @@ function GetSwap(props) {
       }
 
       async function fetchmetadata(){
-        console.log(nftokenId)
-        console.log(nfttokenaddresses)
         if(nftokenId!=undefined && nfttokenaddresses!=undefined ){
-            console.log("here")
              let response=await alchemy.nft.getNftMetadata(nfttokenaddresses,nftokenId);
-             console.log(response);
              setNftMetadata(response);
         }
       }
