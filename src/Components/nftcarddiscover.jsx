@@ -1,12 +1,16 @@
 import { Badge, Box, Button, Flex, Image } from '@chakra-ui/react'
 import React from 'react'
 import img_error from "../Assets/img_error.png"
+import { useNavigate } from 'react-router-dom'
 
 function nftcarddiscover({NFTobj}) {
 
     function formatcontractaddress(address){
       return  NFTobj?.contract.address.substring(0,4)+"...."+NFTobj?.contract.address.slice(-4)
     }
+
+    
+
   return (
     <div>
         <Box maxW="sm" minH="lg"  borderWidth='3px' borderRadius='2xl' boxShadow="dark-lg" overflow='hidden' boxSize="sm" my="1%" backgroundColor="#191825"> 
@@ -39,7 +43,7 @@ function nftcarddiscover({NFTobj}) {
         </Box>
         <Flex direction="column"  >
         <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF">Swap</Button>
-        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF">Connect</Button>
+        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={navigate=("/connect")} >Connect</Button>
         </Flex>
          </Box>
         </Box>

@@ -1,5 +1,5 @@
 import React from "react";
-import GetSwap from "../utils/GetSwap";
+import GetSwap from "./GetSwap";
 import { Flex } from "@chakra-ui/react";
 
 function GetSwapHolder({ props }) {

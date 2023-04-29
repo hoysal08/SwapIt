@@ -7,6 +7,7 @@ import img_error from "../Assets/img_error.png";
 import { Alchemy, Network } from "alchemy-sdk";
 import {  Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import Assets from "../Pages/Assets";
+import { useNavigate } from "react-router-dom";
 
 
 function GetSwap(props) {
@@ -21,6 +22,8 @@ function GetSwap(props) {
     const[alchemy,setalchemy] = useState();
 
     const { chain } = useNetwork();
+
+    const navigate=useNavigate();
 
     let settings;
 
@@ -157,7 +160,7 @@ function GetSwap(props) {
         </Box>
         <Flex direction="column"  >
         <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={onOpen}>Offer-Swap</Button>
-        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF">Connect</Button>
+        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={()=>navigate("/connect")} >Connect</Button>
         </Flex>
          </Box>
         </Box>

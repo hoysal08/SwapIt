@@ -5,6 +5,7 @@ import img_error from "../Assets/img_error.png";
 import { useContractWrite, useFeeData, useNetwork, usePrepareContractWrite } from 'wagmi';
 import { abi, swapaddressethtestnet, swapaddresspolytestnet } from '../Constants';
 import { Alchemy, Network } from 'alchemy-sdk';
+import { useNavigate } from 'react-router-dom';
 
 
 function SwapCard({swapId,NFTobj}) {
@@ -20,6 +21,8 @@ function SwapCard({swapId,NFTobj}) {
 
 
     // console.log(NFTobj);
+
+    const navigate=useNavigate();
 
     useEffect(() => {
    
@@ -128,7 +131,7 @@ function SwapCard({swapId,NFTobj}) {
         </Box>
         <Flex direction="column"  >
         <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={handleAcceptOffer}>Accept Offer</Button>
-        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF">Connect</Button>
+        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={navigate=("/connect")}  >Connect</Button>
         </Flex>
          </Box>
          </Box>

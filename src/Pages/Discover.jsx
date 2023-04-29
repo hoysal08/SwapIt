@@ -4,7 +4,7 @@ import NoNfts from '../Components/NoNfts'
 import { useContractRead, useNetwork, useSigner } from 'wagmi';
 import { abi, swapaddressethtestnet, swapaddresspolytestnet } from '../Constants';
 import { ethers } from 'ethers';
-import GetSwap from '../utils/GetSwap';
+import GetSwap from '../Components/GetSwap';
 import GetSwapHolder from '../Components/GetSwapHolder';
 
 function Discover() {
