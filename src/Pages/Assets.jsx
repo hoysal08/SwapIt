@@ -104,7 +104,7 @@ function Assets(props) {
         {
           regroupednft?.length>0? (regroupednft.map((nftarr,i)=><NftCardHolder key={i} nftarray={nftarr} discover={discoverpage} swapId={swapid} />))
           :
-          (<NoNfts discover={discoverpage} />)
+          (<NoNfts discover={discoverpage} text="You Don't own any NFT's" />)
         }
            
     </Flex>  

@@ -85,9 +85,8 @@ function Discover() {
     <Box backgroundColor="#ECC9EE" pt="3%" h={regroupednft.length<2?"100vh":"100%"}>
       <Flex direction="column">
         {
-          regroupednft ? (regroupednft.map((e,i)=><GetSwapHolder key={i} props={e}/>)):<NoNfts/>
+          regroupednft ? (regroupednft.map((e,i)=><GetSwapHolder key={i} props={e}/>)):<NoNfts text="Currently, No NFT's open for swap"/>
         }
-           
     </Flex>  
     </Box>
     

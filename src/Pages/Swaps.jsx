@@ -154,7 +154,7 @@ function Swaps() {
            )
            }))
            :
-           <NoNfts/>
+           <NoNfts text="You  Don't have any Open-Swaps"/>
         }
       </Box>
     </div>

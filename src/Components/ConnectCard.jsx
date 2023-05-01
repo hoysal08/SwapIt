@@ -8,10 +8,9 @@ import { Alchemy, Network } from 'alchemy-sdk';
 import { useNavigate } from 'react-router-dom';
 
 
-function SwapCard({swapId,NFTobj}) {
+function ConnectCard({swapId,NFTobj,nftmeta}) {
 
     const[alchemy,setalchemy] = useState();
-    const[NftMetadata,setNftMetadata]=useState();
     const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
     const[correctcntaddress, setcorrectcntaddress] = useState(false);
 
@@ -54,22 +53,8 @@ function SwapCard({swapId,NFTobj}) {
         }
        setalchemy(new Alchemy(settings))
        setcorrectcntaddress(true)
-        fetchmetadata()
       }, [chain]);
 
-    async function fetchmetadata(){
-        if(NFTobj?.tokenId!==undefined && NFTobj?.contractaddres!==undefined && correctcntaddress){
-             let response=await alchemy.nft.getNftMetadata(NFTobj.contractaddres,NFTobj.tokenId);
-             setNftMetadata(response);
-        }
-      }
-      useEffect(()=>{
-        // console.log(NftMetadata);
-      },[NftMetadata]);
-
-      useEffect(()=>{
-        fetchmetadata()
-      },[correctcntaddress])
 
     function formatcontractaddress(addr) {
 
@@ -82,6 +67,7 @@ function SwapCard({swapId,NFTobj}) {
           addr.slice(-4)
         );
       }
+
       let { config: AcceptOfferconfig } = usePrepareContractWrite({
         address: contractaddress,
         abi: abi,
@@ -98,11 +84,11 @@ function SwapCard({swapId,NFTobj}) {
 
   return (
     <div>
-        <Box pl="2%">
-        <Text as='samp' fontSize="xl">Offers for SwapID : {swapId}</Text>
-        <Box pl="10%">
+        <Box pl="2%" pt="5%">
+        <Text pl="12%" as='samp' fontSize="xl">Connect With Owner for Swap : {swapId}</Text>
+        <Box pl="10%"  pt="5%">
         <Box maxW="sm" minH="lg"  borderWidth='3px' borderRadius='2xl' boxShadow="dark-lg" overflow='hidden' boxSize="sm" my="1%" backgroundColor="#191825"> 
-         <Image boxSize="xs" ml="6%" pl="3%" my="2%"  src={ NftMetadata?.tokenUri?.gateway  || NftMetadata?.media[0]?.gateway||NftMetadata?.media[0]?.thumbnail|| img_error} alt={"NFT image"} />
+         <Image boxSize="xs" ml="6%" pl="3%" my="2%"  src={ nftmeta?.tokenUri?.gateway  || nftmeta?.media[0]?.gateway||nftmeta?.media[0]?.thumbnail|| img_error} alt={"NFT image"} />
          <Box px='6' py='2' >
             <Box display='flex' justify="space-between">
                 <Badge borderRadius='full' px='2' colorScheme="orange">
@@ -127,11 +113,11 @@ function SwapCard({swapId,NFTobj}) {
           noOfLines={1}
           color='gray.500'
         >
-          {NftMetadata?.contract?.name|| "Untitled" } &bull; {NftMetadata?.contract?.symbol || "Untitled" }
+          {nftmeta?.contract?.name|| "Untitled" } &bull; {nftmeta?.contract?.symbol || "Untitled" }
         </Box>
         <Flex direction="column"  >
         <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={handleAcceptOffer}>Accept Offer</Button>
-        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={()=>{console.log("clcick"); navigate('/connect',{ state:{metdata:NftMetadata,NFTOBJ:NFTobj}})}}  >Connect</Button>
+        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={()=>{navigate('/connect',{ state:{metdata:nftmeta,NFTOBJ:NFTobj}})}}  >Connect</Button>
         </Flex>
          </Box>
          </Box>
@@ -141,4 +127,4 @@ function SwapCard({swapId,NFTobj}) {
   )
 }
 
-export default SwapCard
+export default ConnectCard
