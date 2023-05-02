@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useHuddle01 } from "@huddle01/react";
 import { HuddleIframe, IframeConfig } from "@huddle01/huddle01-iframe";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
@@ -158,6 +158,9 @@ console.log(response);
   setenablechat(true)
  }
 
+
+
+
  function handlehuddlebtn(){
   createroom()
  }
@@ -185,7 +188,7 @@ console.log(response);
     <Button w="250px" h="70px"  backgroundColor="#191825" color="#E384FF"  colorScheme="#E384FF" borderWidth="5" onClick={handlechatbtn}>Chat</Button>
     <Button w="250px" h="70px" borderColor="#E384FF" border="5" backgroundColor="#191825" color="#E384FF"  colorScheme="#E384FF" onClick={handlehuddlebtn}>Huddle</Button>
 </Flex>
-{enablechat && <PushComp reciever={buyer}/>}
+{enablechat && <PushComp  reciever={buyer}/>}
 </Flex>
 </Box>)
     )}

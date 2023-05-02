@@ -4,11 +4,12 @@ import React, { useEffect, useState } from 'react'
 import img_error from "../Assets/img_error.png";
 import { useContractWrite, useFeeData, useNetwork, usePrepareContractWrite } from 'wagmi';
 import { abi, swapaddressethtestnet, swapaddresspolytestnet } from '../Constants';
-import { Alchemy, Network } from 'alchemy-sdk';
+import { Alchemy, Network, NftTokenType } from 'alchemy-sdk';
 import { useNavigate } from 'react-router-dom';
 
 
 function ConnectCard({swapId,NFTobj,nftmeta}) {
+  console.log(NFTobj,nftmeta)
 
     const[alchemy,setalchemy] = useState();
     const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
@@ -87,24 +88,24 @@ function ConnectCard({swapId,NFTobj,nftmeta}) {
         <Box pl="2%" pt="5%">
         <Text pl="12%" as='samp' fontSize="xl">Connect With Owner for Swap : {swapId}</Text>
         <Box pl="10%"  pt="5%">
-        <Box maxW="sm" minH="lg"  borderWidth='3px' borderRadius='2xl' boxShadow="dark-lg" overflow='hidden' boxSize="sm" my="1%" backgroundColor="#191825"> 
+        <Box maxW="sm" minH="lg" pt="5%"  borderWidth='3px' borderRadius='2xl' boxShadow="dark-lg" overflow='hidden' boxSize="sm" my="1%" backgroundColor="#191825"> 
          <Image boxSize="xs" ml="6%" pl="3%" my="2%"  src={ nftmeta?.tokenUri?.gateway  || nftmeta?.media[0]?.gateway||nftmeta?.media[0]?.thumbnail|| img_error} alt={"NFT image"} />
          <Box px='6' py='2' >
-            <Box display='flex' justify="space-between">
+            <Flex direction="row" justify="space-between" >
                 <Badge borderRadius='full' px='2' colorScheme="orange">
                     {swapId}
                 </Badge>
-                <Box
+            <Box
             color='gray.500'
             fontWeight='semibold'
             letterSpacing='wide'
             fontSize='xs'
             textTransform='uppercase'
-            ml='2'
+            ml='10'
           >
-            {formatcontractaddress(NFTobj?.contractaddres)}  &bull; #{NFTobj?.tokenId} 
+            {formatcontractaddress(nftmeta?.contract?.address)}  &bull; #{nftmeta?.tokenId} 
           </Box>
-        </Box>
+        </Flex>
         <Box
           mt='1'
           fontWeight='semibold'
@@ -115,9 +116,8 @@ function ConnectCard({swapId,NFTobj,nftmeta}) {
         >
           {nftmeta?.contract?.name|| "Untitled" } &bull; {nftmeta?.contract?.symbol || "Untitled" }
         </Box>
-        <Flex direction="column"  >
+        <Flex  pt="3%" direction="column"  >
         <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={handleAcceptOffer}>Accept Offer</Button>
-        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={()=>{navigate('/connect',{ state:{metdata:nftmeta,NFTOBJ:NFTobj}})}}  >Connect</Button>
         </Flex>
          </Box>
          </Box>

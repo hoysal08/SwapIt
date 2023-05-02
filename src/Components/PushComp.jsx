@@ -89,7 +89,7 @@ if(address!=undefined && signer!=undefined){
    account={address} //user address
    supportAddress={reciever} //support address
    env="staging"
-   greetingMsg={null}
+   greetingMsg="Let's Huddle?"
    theme={themeee}
    modalTitle="Let's Swap-It"
  />

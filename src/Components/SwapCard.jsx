@@ -1,6 +1,6 @@
 import { Badge, Box, Button, Flex, Image, Text } from '@chakra-ui/react'
 import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import img_error from "../Assets/img_error.png";
 import { useContractWrite, useFeeData, useNetwork, usePrepareContractWrite } from 'wagmi';
 import { abi, swapaddressethtestnet, swapaddresspolytestnet } from '../Constants';
@@ -98,9 +98,10 @@ function SwapCard({swapId,NFTobj}) {
 
   return (
     <div>
+      
         <Box pl="2%">
-        <Text as='samp' fontSize="xl">Offers for SwapID : {swapId}</Text>
-        <Box pl="10%">
+        <Text pt="2%" pl="4%" as='samp' fontSize="xl">Offers for SwapID : {swapId}</Text>
+        <Box pl="10%" pt="2%">
         <Box maxW="sm" minH="lg"  borderWidth='3px' borderRadius='2xl' boxShadow="dark-lg" overflow='hidden' boxSize="sm" my="1%" backgroundColor="#191825"> 
          <Image boxSize="xs" ml="6%" pl="3%" my="2%"  src={ NftMetadata?.tokenUri?.gateway  || NftMetadata?.media[0]?.gateway||NftMetadata?.media[0]?.thumbnail|| img_error} alt={"NFT image"} />
          <Box px='6' py='2' >
