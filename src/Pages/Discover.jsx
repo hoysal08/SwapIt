@@ -6,6 +6,7 @@ import { abi, swapaddressethtestnet, swapaddresspolytestnet } from '../Constants
 import { ethers } from 'ethers';
 import GetSwap from '../Components/GetSwap';
 import GetSwapHolder from '../Components/GetSwapHolder';
+import { filmarketaddress } from '../Constants';
 
 function Discover() {
 
@@ -19,6 +20,8 @@ function Discover() {
   const[swapIndexarr,setswapindexarr] = useState([])
   const [NFTdata,setNftdata]=useState();
   const [regroupednft,setregroupednft]=useState([]);
+  const[isitfilcoin,setisitfilcoin]=useState(false);
+
 
 
   function getcontractaddress() {
@@ -27,6 +30,10 @@ function Discover() {
     }
     if (chain?.id === 80001) {
       setcontractaddress(ethers.utils.getAddress(swapaddresspolytestnet));
+    }
+    if(chain.id===3141){
+      setisitfilcoin(true)
+      setcontractaddress(ethers.utils.getAddress(filmarketaddress))
     }
     setcorrectcntaddress(true)
   }
@@ -78,6 +85,7 @@ function Discover() {
   },[swapIndexarr])
 
   useEffect(()=>{
+    console.log(regroupednft)
   },[regroupednft])
 
   return (
@@ -85,7 +93,7 @@ function Discover() {
     <Box backgroundColor="#ECC9EE" pt="3%" h={regroupednft.length<2?"100vh":"100%"}>
       <Flex direction="column">
         {
-          regroupednft ? (regroupednft.map((e,i)=><GetSwapHolder key={i} props={e}/>)):<NoNfts text="Currently, No NFT's open for swap"/>
+          regroupednft.length>0 ? (regroupednft.map((e,i)=><GetSwapHolder key={i} props={e} fil={isitfilcoin}/>)):<NoNfts text="Currently, No NFT's open for swap"/>
         }
     </Flex>  
     </Box>

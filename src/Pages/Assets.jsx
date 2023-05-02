@@ -139,7 +139,7 @@ function Assets(props) {
     <Box backgroundColor="#ECC9EE" pt="3%" h={NFTdata?.length>3?"100%":"100vh"}>
       <Flex direction="column">
         {
-          regroupednft?.length>0? (regroupednft.map((nftarr,i)=><NftCardHolder key={i} nftarray={nftarr} discover={discoverpage} swapId={swapid} fil={true} />))
+          regroupednft?.length>0? (regroupednft.map((nftarr,i)=><NftCardHolder key={i} nftarray={nftarr} discover={discoverpage} swapId={swapid} fil={isitfilcoin} />))
           :
           (<NoNfts discover={discoverpage} text="You Don't own any NFT's" />)
         }
