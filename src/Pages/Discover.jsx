@@ -31,7 +31,7 @@ function Discover() {
     if (chain?.id === 80001) {
       setcontractaddress(ethers.utils.getAddress(swapaddresspolytestnet));
     }
-    if(chain.id===3141){
+    if(chain?.id===3141){
       setisitfilcoin(true)
       setcontractaddress(ethers.utils.getAddress(filmarketaddress))
     }

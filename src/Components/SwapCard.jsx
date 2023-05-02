@@ -2,22 +2,28 @@ import { Badge, Box, Button, Flex, Image, Text } from '@chakra-ui/react'
 import { ethers } from 'ethers';
 import React, { useEffect, useRef, useState } from 'react'
 import img_error from "../Assets/img_error.png";
-import { useContractWrite, useFeeData, useNetwork, usePrepareContractWrite } from 'wagmi';
-import { abi, swapaddressethtestnet, swapaddresspolytestnet } from '../Constants';
+import { useContractWrite, useFeeData, useNetwork, usePrepareContractWrite, useSigner } from 'wagmi';
+import { abi, filmarketaddress, filnftabi, swapaddressethtestnet, swapaddresspolytestnet } from '../Constants';
 import { Alchemy, Network } from 'alchemy-sdk';
 import { useNavigate } from 'react-router-dom';
 
 
 function SwapCard({swapId,NFTobj}) {
 
+  console.log(NFTobj)
+
     const[alchemy,setalchemy] = useState();
     const[NftMetadata,setNftMetadata]=useState();
     const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
     const[correctcntaddress, setcorrectcntaddress] = useState(false);
+    const[isitfilcoin,setisitfilcoin]=useState(false);
+    const[NFTURI,setnfturi] = useState();
+
 
 
     let settings;
     const { chain } = useNetwork();
+    const { data:signer } = useSigner();
 
 
 
@@ -51,15 +57,28 @@ function SwapCard({swapId,NFTobj}) {
                 network: Network.MATIC_MUMBAI,
               };
         }
-       setalchemy(new Alchemy(settings))
+        if(chain?.id===3141){
+          setisitfilcoin(true)
+          setcontractaddress(ethers.utils.getAddress(filmarketaddress));
+          fetchmetadatafil()
+        }
+        if(chain?.id!==3141){
+          fetchmetadata()
+        }
+        setalchemy(new Alchemy(settings))
        setcorrectcntaddress(true)
-        fetchmetadata()
-      }, [chain]);
+      }, [chain,contractaddress]);
 
     async function fetchmetadata(){
         if(NFTobj?.tokenId!==undefined && NFTobj?.contractaddres!==undefined && correctcntaddress){
              let response=await alchemy.nft.getNftMetadata(NFTobj.contractaddres,NFTobj.tokenId);
              setNftMetadata(response);
+        }
+      }
+      async function fetchmetadatafil(){
+        if(NFTobj?.tokenId!==undefined && NFTobj?.contractaddres!==undefined && correctcntaddress){
+          const contract=new ethers.Contract(NFTobj?.contractaddres,filnftabi,signer);
+        setnfturi(await contract.tokenURI(NFTobj?.tokenId));
         }
       }
 
@@ -92,6 +111,7 @@ function SwapCard({swapId,NFTobj}) {
         acceptswapWrite?.()
       }
 
+      console.log(NFTURI)
   return (
     <div>
       
@@ -99,13 +119,14 @@ function SwapCard({swapId,NFTobj}) {
         <Text pt="2%" pl="4%" as='samp' fontSize="xl">Offers for SwapID : {swapId}</Text>
         <Box pl="10%" pt="2%">
         <Box maxW="sm" minH="lg"  borderWidth='3px' borderRadius='2xl' boxShadow="dark-lg" overflow='hidden' boxSize="sm" my="1%" backgroundColor="#191825"> 
-         <Image boxSize="xs" ml="6%" pl="3%" my="2%"  src={ NftMetadata?.tokenUri?.gateway  || NftMetadata?.media[0]?.gateway||NftMetadata?.media[0]?.thumbnail|| img_error} alt={"NFT image"} />
+         <Image boxSize="xs" ml="6%" pl="3%" my="2%"  src={isitfilcoin?(NFTURI):(NftMetadata?.tokenUri?.gateway  || NftMetadata?.media[0]?.gateway||NftMetadata?.media[0]?.thumbnail|| img_error)} alt={"NFT image"} />
          <Box px='6' py='2' >
-            <Box display='flex' justify="space-between">
+          <Flex direction="row" justify="space-between">
+            
                 <Badge borderRadius='full' px='2' colorScheme="orange">
                     {swapId}
                 </Badge>
-                <Box
+              <Box
             color='gray.500'
             fontWeight='semibold'
             letterSpacing='wide'
@@ -115,7 +136,7 @@ function SwapCard({swapId,NFTobj}) {
           >
             {formatcontractaddress(NFTobj?.contractaddres)}  &bull; #{NFTobj?.tokenId} 
           </Box>
-        </Box>
+                  </Flex>
         <Box
           mt='1'
           fontWeight='semibold'
@@ -128,7 +149,7 @@ function SwapCard({swapId,NFTobj}) {
         </Box>
         <Flex direction="column"  >
         <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={handleAcceptOffer}>Accept Offer</Button>
-        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={()=>{ navigate('/connect',{ state:{metdata:NftMetadata,NFTOBJ:NFTobj}})}}  >Connect</Button>
+        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={()=>{ navigate('/connect',{ state:{metdata:isitfilcoin?(NFTURI):(NftMetadata),NFTOBJ:NFTobj}})}}  >Connect</Button>
         </Flex>
          </Box>
          </Box>
@@ -140,4 +161,3 @@ function SwapCard({swapId,NFTobj}) {
 
 export default SwapCard
 
-//{swapId,NFTobj,nftmeta}

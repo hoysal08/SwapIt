@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAccount, useContractRead, useNetwork, useSigner } from "wagmi";
 import {
   abi,
+  filmarketaddress,
   swapaddressethtestnet,
   swapaddresspolytestnet,
 } from "../Constants";
@@ -12,6 +13,7 @@ import SwapCard from "../Components/SwapCard";
 import NoNfts from "../Components/NoNfts";
 
 function Swaps() {
+
   const { chain } = useNetwork();
   const { address } = useAccount();
   const { data: signer } = useSigner();
@@ -22,6 +24,8 @@ function Swaps() {
   const [offeredswaps, setofferedswaps] = useState(new Map());
   const[keyarray, setkeyarray] = useState([])
   const[valuesarr, setvaluesarr] = useState([]);
+  const[isitfilcoin,setisitfilcoin]=useState(false);
+
 
   const { data } = useContractRead({
     address: ethers.utils.getAddress(contractaddress),
@@ -29,7 +33,7 @@ function Swaps() {
     functionName: "userSwapCount",
     chainId: chain?.id,
     args: [address],
-    enabled: Boolean(correctcntaddres),
+    enabled: Boolean(correctcntaddres && address),
     onSuccess(data) {
       setopenswapcount(data.toNumber());
     },
@@ -43,8 +47,9 @@ function Swaps() {
         let temp = await contract.userSwaps(address, i);
         res.push(temp.swapId.toNumber());
       }
-      setopenswapnft(res);
     }
+    setopenswapnft(res);
+    console.log(res)
   }
 
   function getuseroffers() {
@@ -74,11 +79,12 @@ function Swaps() {
        offeredswaps.set(swapId, res[swapId]);
       setofferedswaps(offeredswaps.set(swapId,res[swapId]))
     } catch (err) {
-      console.log("No offers exist for swap :" + i);
+      console.log("No offers exist for swap  :" + i);
     }
   }
 
   function connvertintoarrs(){
+    console.log(openswapcount)
     if(valuesarr.length<openswapcount && keyarray.length<openswapcount){
           offeredswaps.forEach((value,key)=>{
              if(keyarray.indexOf(key)===-1){
@@ -89,12 +95,17 @@ function Swaps() {
     }
   }
 
+
   function getcontractaddress() {
     if (chain?.id === 11155111) {
       setcontractaddress(ethers.utils.getAddress(swapaddressethtestnet));
     }
     if (chain?.id === 80001) {
       setcontractaddress(ethers.utils.getAddress(swapaddresspolytestnet));
+    }
+    if(chain?.id===3141){
+      setisitfilcoin(true)
+      setcontractaddress(ethers.utils.getAddress(filmarketaddress))
     }
     setcorrectcntaddres(true);
   }

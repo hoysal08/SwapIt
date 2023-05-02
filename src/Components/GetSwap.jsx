@@ -59,12 +59,12 @@ function GetSwap({props,fil}) {
               network: Network.MATIC_MUMBAI,
             };
       }
-      if(chain.id===3141){
+      if(chain?.id===3141){
         setisitfilcoin(true)
         setcontractaddress(ethers.utils.getAddress(filmarketaddress));
         fetchmetadatafil()
       }
-      else{
+      if(chain.id!==3141){
         setalchemy(new Alchemy(settings))
         fetchmetadata()
       }

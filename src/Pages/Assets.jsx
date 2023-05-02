@@ -113,11 +113,11 @@ function Assets(props) {
           };
     }
 
-    if(chain.id===3141){
+    if(chain?.id===3141){
            setisitfilcoin(true)
            fetchfilecoinNFTS()
     }
-    else{
+    if(chain.id!==3141){
           alchemy=new Alchemy(settings)
           fetchNftss()
     }
