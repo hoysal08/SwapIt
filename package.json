@@ -2,6 +2,7 @@
   "name": "interface",
   "version": "0.1.0",
   "private": true,
+  "proxy":"https://mintboxx.onrender.com",
   "dependencies": {
     "@chakra-ui/icons": "^2.0.18",
     "@chakra-ui/react": "^2.5.5",

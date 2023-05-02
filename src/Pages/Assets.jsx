@@ -5,21 +5,34 @@ import { Box, Flex } from "@chakra-ui/react";
 import NftCard from "../Components/NftCard";
 import NftCardHolder from "../Components/NftCardHolder";
 import NoNfts from "../Components/NoNfts";
+import axios from "axios";
 
 function Assets(props) {
- let discoverpage=props?.discover
- let swapid=props?.swapId
+ let discoverpage=props?.discover;
+ let swapid=props?.swapId;
     
     const { chain } = useNetwork();
     const { address } = useAccount();
-
+    const [filNFT,setfilNFT]=useState()
     const [NFTdata,setNftdata]=useState([]);
     const [regroupednft,setregroupednft]=useState([])
     const[onlyerc721,setonlyerc721]=useState(false);
+    const[isitfilcoin,setisitfilcoin]=useState(false);
 
     
     let alchemy;
     let settings;
+
+    async function fetchfilecoinNFTS()
+    {
+      if(address!=undefined){
+        let filecoinAPI=`https://mintboxx.onrender.com/api/ERC721Transfers?owner=${address}`
+        let response=axios.get(filecoinAPI).then((response) =>{
+                console.log(response);
+                setfilNFT(response.data.allNFTs)
+              })
+      }
+    }
 
       const fetchNftss=async()=>{
         let res=await alchemy.nft.getNftsForOwner(address)
@@ -40,6 +53,20 @@ function Assets(props) {
       }
     }
 
+    const groupnftdataFIL=()=>{
+      if( filNFT?.length>0){
+        let group = [];
+        const n=3;
+        for (let i = 0, j = 0; i < filNFT?.length; i++) {
+            if (i >= n && i % n === 0)
+                j++;
+            group[j] = group[j] || [];
+            group[j].push(filNFT[i])
+        }
+        setregroupednft(group);
+      }
+    }
+
     const groupnftdata=()=>{
       if(onlyerc721 && NFTdata.length>0){
         let group = [];
@@ -54,6 +81,10 @@ function Assets(props) {
       }
     }
     
+
+    useEffect(()=>{
+          groupnftdataFIL()
+    },[filNFT])
     
     useEffect(() => {
      
@@ -82,8 +113,14 @@ function Assets(props) {
           };
     }
 
-    alchemy=new Alchemy(settings)
-    fetchNftss()
+    if(chain.id===3141){
+           setisitfilcoin(true)
+           fetchfilecoinNFTS()
+    }
+    else{
+          alchemy=new Alchemy(settings)
+          fetchNftss()
+    }
   }, [chain,address]);
 
   useEffect(()=>{
@@ -102,7 +139,7 @@ function Assets(props) {
     <Box backgroundColor="#ECC9EE" pt="3%" h={NFTdata?.length>3?"100%":"100vh"}>
       <Flex direction="column">
         {
-          regroupednft?.length>0? (regroupednft.map((nftarr,i)=><NftCardHolder key={i} nftarray={nftarr} discover={discoverpage} swapId={swapid} />))
+          regroupednft?.length>0? (regroupednft.map((nftarr,i)=><NftCardHolder key={i} nftarray={nftarr} discover={discoverpage} swapId={swapid} fil={true} />))
           :
           (<NoNfts discover={discoverpage} text="You Don't own any NFT's" />)
         }

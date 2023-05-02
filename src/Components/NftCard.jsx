@@ -30,6 +30,7 @@ import {
 
 import {
   abi,
+  filmarketaddress,
   swapaddressethtestnet,
   swapaddresspolytestnet,
 } from "../Constants";
@@ -40,6 +41,29 @@ function NftCard(props) {
   let NFTobj = props?.NFTobj;
   let discoverpage = props?.discover;
   let swapid = props?.swapId;
+  let filNFT=props?.fil
+
+
+   const[NFTURI,senfturi]=useState();
+   const[NFTcontractaddress,setNFTcontractaddress]=useState("")
+   const[NFTtokenID,setNFTtokenID]=useState();
+   const[NFTname,setNFTname]=useState();
+   const[NFTsumbol,setNFTsumbol]=useState();
+
+  useEffect(()=>{
+    if(filNFT){
+      setNFTcontractaddress(String(NFTobj.tokenAddress))
+      setNFTtokenID(NFTobj.tokenID)
+      senfturi(NFTobj.tokenURI)
+    }
+    else{
+      setNFTcontractaddress(NFTobj?.contract.address)
+      setNFTtokenID(NFTobj?.tokenId);
+      setNFTname(NFTobj?.contract?.name)
+      setNFTsumbol(NFTobj?.contract?.symbol)
+    }
+
+  },[])
 
 
   function formatcontractaddress(addr) {
@@ -61,10 +85,13 @@ function NftCard(props) {
   function getcontractaddress() {
    
       if (chain.id === 11155111) {
-        setcontractaddress(ethers.utils.getAddress(swapaddressethtestnet));
+        setcontractaddress((swapaddressethtestnet));
       }
       if (chain.id === 80001) {
-        setcontractaddress(ethers.utils.getAddress(swapaddresspolytestnet));
+        setcontractaddress((swapaddresspolytestnet));
+      }
+      if(chain?.id==3141){
+        setcontractaddress((filmarketaddress))
       }
       // setcorrectcntaddress(true);
     
@@ -76,8 +103,8 @@ function NftCard(props) {
     abi: abi,
     functionName: "isApprovedfunc",
     args: [
-      ethers.utils.getAddress(NFTobj?.contract.address),
-      parseInt(NFTobj?.tokenId),
+      (NFTcontractaddress),
+      parseInt(NFTtokenID),
     ],
     chainId: chain?.id,
     enabled: Boolean(correctcntaddress),
@@ -98,8 +125,8 @@ function NftCard(props) {
     abi: abi,
     functionName: "createSwap",
     args: [
-      [ethers.utils.getAddress(NFTobj?.contract.address)],
-      [NFTobj?.tokenId],
+      [(NFTcontractaddress)],
+      [NFTtokenID],
       description,
     ],
     enabled: Boolean(correctcntaddress),
@@ -113,10 +140,10 @@ function NftCard(props) {
   }
 
   const { config: approveconfig } = usePrepareContractWrite({
-    address: NFTobj?.contract?.address,
+    address: NFTcontractaddress,
     abi: erc721ABI,
     functionName: "approve",
-    args: [contractaddress, NFTobj?.tokenId],
+    args: [contractaddress, NFTtokenID],
     enabled: Boolean(correctcntaddress && contractaddress && NFTobj),
   });
 
@@ -137,8 +164,8 @@ function NftCard(props) {
     functionName: "proposeOffer",
     args: [
       swapid,
-      [ethers.utils.getAddress(NFTobj?.contract.address)],
-      [NFTobj?.tokenId],
+      [(NFTcontractaddress)],
+      [NFTtokenID],
     ],
     enabled: Boolean(swapid !== undefined && correctcntaddress),
     
@@ -174,17 +201,16 @@ function NftCard(props) {
           pr={discoverpage ? "15%" : ""}
           py={discoverpage ? "2%" : ""}
           src={
-            NFTobj?.media[0]?.thumbnail ||
+            filNFT?(NFTURI ||img_error):(NFTobj?.media[0]?.thumbnail ||
             NFTobj?.media[0]?.gateway ||
-            NFTobj?.tokenUri?.gateway ||
-            img_error
+            NFTobj?.tokenUri?.gateway ||img_error)
           }
           alt={"NFT image"}
         />
         <Box px="6" pt="2" justifyContent="space-evenly">
           <Box display="flex" justifyContent="space-between">
             <Badge borderRadius="full" px="2" colorScheme="orange">
-              {NFTobj?.balance}
+              {filNFT?(1): (NFTobj?.balance)}
             </Badge>
             <Box
               color="gray.500"
@@ -194,8 +220,8 @@ function NftCard(props) {
               textTransform="uppercase"
               ml="2"
             >
-              {formatcontractaddress(NFTobj?.contract.address)} &bull; #
-              {NFTobj?.tokenId}
+              {formatcontractaddress(NFTcontractaddress)} &bull; #
+              {NFTtokenID}
             </Box>
           </Box>
           <Box
@@ -208,8 +234,8 @@ function NftCard(props) {
             fontSize={discoverpage ? "xs" : ""}
             my={discoverpage ? "2" : "5"}
           >
-            {NFTobj?.contract?.name || "Untitled"} &bull;{" "}
-            {NFTobj?.contract?.symbol || "Untitled"}
+            {NFTname || "Untitled"} &bull;{" "}
+            {NFTsumbol || "Untitled"}
           </Box>
           <Flex direction="column" justify="center">
             <Button
