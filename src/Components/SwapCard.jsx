@@ -142,3 +142,5 @@ function SwapCard({swapId,NFTobj}) {
 }
 
 export default SwapCard
+
+//{swapId,NFTobj,nftmeta}

@@ -3,13 +3,14 @@ import { useAccount, useSigner, useSwitchNetwork,useNetwork } from 'wagmi'
 import { Chat } from "@pushprotocol/uiweb";
 import * as PushAPI from "@pushprotocol/restapi"
 
-function PushComp() {
+function PushComp(props) {
 
 
+  const buyerr=props.reciever;
   const{address}=useAccount();
   const { data: signer } = useSigner();
   const { chain } = useNetwork()
-  const[dummyreceiver,setdummy]=useState("0x68be6B45425152c971F26764E67124480C066adf")
+  const[reciever,setdummy]=useState(buyerr)
   const { chains, error, isLoading, pendingChainId, switchNetwork } =useSwitchNetwork()
 
 
@@ -47,7 +48,7 @@ const pgpDecryptedPvtKey = await PushAPI.chat.decryptPGPKey({
   // conversation hash are also called link inside chat messages
   const conversationHash = await PushAPI.chat.conversationHash({
     account: `eip155:${address}`,
-    conversationId: `eip155:${dummyreceiver}`,
+    conversationId: `eip155:${reciever}`,
     env:'staging' // receiver's address or chatId of a group
   });
   
@@ -56,7 +57,7 @@ const pgpDecryptedPvtKey = await PushAPI.chat.decryptPGPKey({
 
 const chatHistory = await PushAPI.chat.history({
 threadhash: conversationHash.threadHash,
-account: `eip155:${dummyreceiver}`,
+account: `eip155:${reciever}`,
 limit: 10,
 toDecrypt: true,
 pgpPrivateKey: pgpDecryptedPvtKey,
@@ -82,17 +83,11 @@ if(address!=undefined && signer!=undefined){
 }
 },[address,signer])
 
-useEffect(()=>{
-  if(address=='0x68be6B45425152c971F26764E67124480C066adf'){
-    setdummy("0x73FF456F43Beb9Be727C5cb998Ed00B40cE55d1E")
-  }
-},[address])
-
   return (
     <div>
       <Chat
    account={address} //user address
-   supportAddress={dummyreceiver} //support address
+   supportAddress={reciever} //support address
    env="staging"
    greetingMsg={null}
    theme={themeee}

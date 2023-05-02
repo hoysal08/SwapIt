@@ -95,10 +95,8 @@ function Swaps() {
   }
 
   function connvertintoarrs(){
-    console.log(keyarray)
     if(valuesarr.length<openswapcount && keyarray.length<openswapcount){
           offeredswaps.forEach((value,key)=>{
-            console.log(key)
              if(keyarray.indexOf(key)===-1){
               setkeyarray(keyarray=>[...keyarray,key]);
               setvaluesarr(valuesarr=>[...valuesarr,value]);
@@ -142,7 +140,10 @@ function Swaps() {
   },[keyarray])
 
  connvertintoarrs()
+ console.log(valuesarr);
+
   return (
+
     <div>
       <Box backgroundColor="#ECC9EE" pt="2%" h={valuesarr.length>1?"100%":"100vh"}>
         {
