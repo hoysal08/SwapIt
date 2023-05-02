@@ -20,7 +20,6 @@ function SwapCard({swapId,NFTobj}) {
     const { chain } = useNetwork();
 
 
-    // console.log(NFTobj);
 
     let navigate=useNavigate();
 
@@ -63,9 +62,6 @@ function SwapCard({swapId,NFTobj}) {
              setNftMetadata(response);
         }
       }
-      useEffect(()=>{
-        // console.log(NftMetadata);
-      },[NftMetadata]);
 
       useEffect(()=>{
         fetchmetadata()
@@ -132,7 +128,7 @@ function SwapCard({swapId,NFTobj}) {
         </Box>
         <Flex direction="column"  >
         <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={handleAcceptOffer}>Accept Offer</Button>
-        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={()=>{console.log("clcick"); navigate('/connect',{ state:{metdata:NftMetadata,NFTOBJ:NFTobj}})}}  >Connect</Button>
+        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={()=>{ navigate('/connect',{ state:{metdata:NftMetadata,NFTOBJ:NFTobj}})}}  >Connect</Button>
         </Flex>
          </Box>
          </Box>

@@ -37,7 +37,6 @@ function Connect() {
 
   useEffect(()=>{
 
-    console.log(nftobj)
     if(nftobj!=undefined){
     let num=Number(nftobj?.swapId._hex)
     setswapid(num)
@@ -49,44 +48,6 @@ function Connect() {
     }
   },[nftobj])
 
-//   const [roomId, setroomID] = useState("");
-//   const{address}=useAccount();
-
-//   const iframeConfig = {
-//     roomUrl: `https://iframe.huddle01.com/${roomId}`,
-//     height: "660px",
-//     width: "100%",
-//     noBorder: false, // false by default
-//   };
-
-//   async function createroom() {
-
-//     if(roomId==""){
-//       const response = await axios.post(
-//   'https://iriko.testing.huddle01.com/api/v1/create-iframe-room',
-//   {
-//     title: 'Huddle01-Test',
-//     roomLocked: true
-//   },
-//   {
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'x-api-key':process.env.REACT_APP_API_KEY,
-//     },
-//   }
-// );
-// console.log(response);
-// setroomID(response?.data.data.roomId);
-// console.log(response?.data.data.roomId)
-//     }
-    
-//   }
-
-  
-//   useEffect(() => {
-//     // its preferable to use env vars to store projectId
-//     createroom();
-//   }, []);
 
 async function createroom() {
 
@@ -104,19 +65,14 @@ async function createroom() {
   },
 }
 );
-console.log(response);
 setroomID(response?.data.data.roomId);
-console.log(response?.data.data.roomId)
   }
 }
-console.log(roomId)
 async function sendmessage(){
   // pre-requisite API calls that should be made before
 // need to get user and through that encryptedPvtKey of the user
 
-console.log(signer)
-console.log(address)
-console.log(buyer)
+
 const user = await PushAPI.user.get({
   account: `eip155:${address}`,
   env: 'staging'
@@ -140,8 +96,6 @@ const pgpDecryptedPvtKey = await PushAPI.chat.decryptPGPKey({
   env: 'staging'
 });
 
-console.log(pgpDecryptedPvtKey)
-
 // actual api
 const response = await PushAPI.chat.send({
 messageContent: `Join the call here , https://iframe.huddle01.com/${roomId}`,
@@ -152,13 +106,10 @@ pgpPrivateKey: pgpDecryptedPvtKey,
 env: 'staging'
 });
 
-console.log(response);
 }
  function handlechatbtn(){
   setenablechat(true)
  }
-
-
 
 
  function handlehuddlebtn(){
@@ -168,7 +119,6 @@ console.log(response);
 
  useEffect(()=>{
    if(roomId!=""){
-    console.log(roomId)
     sendmessage()
   setenablehuddle(true)
    }

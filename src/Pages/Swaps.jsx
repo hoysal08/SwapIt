@@ -35,21 +35,6 @@ function Swaps() {
     },
   });
 
-  // const {useropenswaps}=useContractRead({
-  //   address:ethers.utils.getAddress(contractaddress),
-  //   abi:abi,
-  //   functionName:'userSwaps',
-  //   chainId:chain?.id,
-  //   args:[address,0],
-  //   enabled:Boolean(correctcntaddres),
-  //   onSuccess(useropenswaps) {
-  //     console.log(useropenswaps)
-  //     },
-  //     onError(err){
-  //       console.log(err)
-  //     }
-  // });
-
   async function getuserswaps() {
     let res = [];
     if (correctcntaddres && openswapcount && signer) {
@@ -86,7 +71,6 @@ function Swaps() {
         ...res[swapId],
         tokenId: (await contract.getOSwapTokenId(swapId, 0)).toNumber(),
       };
-      // console.log(res);
        offeredswaps.set(swapId, res[swapId]);
       setofferedswaps(offeredswaps.set(swapId,res[swapId]))
     } catch (err) {
@@ -133,14 +117,12 @@ function Swaps() {
 
 
   useEffect(()=>{
-    // console.log("here")
     if(keyarray.length<openswapcount){
       connvertintoarrs()
     }
   },[keyarray])
 
  connvertintoarrs()
- console.log(valuesarr);
 
   return (
 

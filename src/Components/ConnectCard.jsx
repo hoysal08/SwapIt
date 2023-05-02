@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 
 
 function ConnectCard({swapId,NFTobj,nftmeta}) {
-  console.log(NFTobj,nftmeta)
 
     const[alchemy,setalchemy] = useState();
     const [contractaddress, setcontractaddress] = useState(swapaddressethtestnet);
@@ -20,7 +19,6 @@ function ConnectCard({swapId,NFTobj,nftmeta}) {
     const { chain } = useNetwork();
 
 
-    // console.log(NFTobj);
 
     let navigate=useNavigate();
 

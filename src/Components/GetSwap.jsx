@@ -161,7 +161,7 @@ function GetSwap(props) {
         </Box>
         <Flex direction="column"  >
         <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={onOpen}>Offer-Swap</Button>
-        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={()=>{console.log("clcick"); navigate('/connect',{ state:{metdata:NftMetadata,NFTOBJ:nftobj}})}} >Connect</Button>
+        <Button  backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={()=>{ navigate('/connect',{ state:{metdata:NftMetadata,NFTOBJ:nftobj}})}} >Connect</Button>
         </Flex>
          </Box>
         </Box>
