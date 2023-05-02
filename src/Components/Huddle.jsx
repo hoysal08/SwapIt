@@ -5,39 +5,38 @@ import { Box, Button } from "@chakra-ui/react";
 import axios from "axios";
 import { useAccount } from "wagmi";
 
-function Huddlecomp() {
-  const [roomId, setroomID] = useState("");
+function Huddlecomp({roomID}) {
   const{address}=useAccount();
 
   const iframeConfig = {
-    roomUrl: `https://iframe.huddle01.com/${roomId}`,
+    roomUrl: `https://iframe.huddle01.com/${roomID}`,
     height: "660px",
     width: "100%",
     noBorder: false, // false by default
   };
 
-  async function createroom() {
+//   async function createroom() {
 
-    if(roomId==""){
-      const response = await axios.post(
-  'https://iriko.testing.huddle01.com/api/v1/create-iframe-room',
-  {
-    title: 'Huddle01-Test',
-    roomLocked: true
-  },
-  {
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key':process.env.REACT_APP_API_KEY,
-    },
-  }
-);
-console.log(response);
-setroomID(response?.data.data.roomId);
-console.log(response?.data.data.roomId)
-    }
+//     if(roomId==""){
+//       const response = await axios.post(
+//   'https://iriko.testing.huddle01.com/api/v1/create-iframe-room',
+//   {
+//     title: 'Huddle01-Test',
+//     roomLocked: true
+//   },
+//   {
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'x-api-key':process.env.REACT_APP_API_KEY,
+//     },
+//   }
+// );
+// console.log(response);
+// setroomID(response?.data.data.roomId);
+// console.log(response?.data.data.roomId)
+//     }
     
-  }
+//   }
 
   
   useEffect(() => {

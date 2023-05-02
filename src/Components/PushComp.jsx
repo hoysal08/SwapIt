@@ -67,15 +67,15 @@ env: 'staging'
 // console.log(chatHistory);
 } 
 const themeee = {
-  bgColorPrimary: 'gray',
-  bgColorSecondary: 'purple',
-  textColorPrimary: 'white',
-  textColorSecondary: 'green',
-  btnColorPrimary: 'red',
+  bgColorPrimary: 'white',
+  bgColorSecondary: 'white',
+  textColorPrimary: '#191825',
+  textColorSecondary: '#191825',
+  btnColorPrimary: '#E384FF',
   btnColorSecondary: 'purple',
-  border: '1px solid black',
+  border: '2px solid #191825',
   borderRadius: '40px',
-  moduleColor: 'pink',
+  moduleColor: '#FFA3FD',
 };
 useEffect(()=>{
 if(address!=undefined && signer!=undefined){

@@ -174,7 +174,7 @@ console.log(response);
   return (
   <div >
     <Box backgroundColor="#ECC9EE" >
-    {enablehuddle ?(<Huddlecomp/>) :(
+    {enablehuddle ?(<Huddlecomp roomID={roomId}/>) :(
       (metadata && nftobj) && (
   <Box>
 <Flex direction="row" >
