@@ -1,19 +1,28 @@
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react'
-import React from 'react'
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
+import React from "react";
 
 function NFTModal() {
-
-    const  { isOpen, onOpen, onClose } = useDisclosure()
-    const btnRef = React.useRef(null)
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = React.useRef(null);
   return (
     <div>
-        <Modal
+      <Modal
         onClose={onClose}
         finalFocusRef={btnRef}
         isOpen={isOpen}
-        scrollBehavior={'outside'}
+        scrollBehavior={"outside"}
       >
-        <ModalOverlay/>
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>Modal Title</ModalHeader>
           <ModalCloseButton />
@@ -26,7 +35,7 @@ function NFTModal() {
         </ModalContent>
       </Modal>
     </div>
-  )
+  );
 }
 
-export default NFTModal
+export default NFTModal;

@@ -41,30 +41,26 @@ function NftCard(props) {
   let NFTobj = props?.NFTobj;
   let discoverpage = props?.discover;
   let swapid = props?.swapId;
-  let filNFT=props?.fil
+  let filNFT = props?.fil;
 
+  const [NFTURI, senfturi] = useState();
+  const [NFTcontractaddress, setNFTcontractaddress] = useState("");
+  const [NFTtokenID, setNFTtokenID] = useState();
+  const [NFTname, setNFTname] = useState();
+  const [NFTsumbol, setNFTsumbol] = useState();
 
-   const[NFTURI,senfturi]=useState();
-   const[NFTcontractaddress,setNFTcontractaddress]=useState("")
-   const[NFTtokenID,setNFTtokenID]=useState();
-   const[NFTname,setNFTname]=useState();
-   const[NFTsumbol,setNFTsumbol]=useState();
-
-  useEffect(()=>{
-    if(filNFT){
-      setNFTcontractaddress(String(NFTobj.tokenAddress))
-      setNFTtokenID(NFTobj.tokenID)
-      senfturi(NFTobj.tokenURI)
-    }
-    else{
-      setNFTcontractaddress(NFTobj?.contract.address)
+  useEffect(() => {
+    if (filNFT) {
+      setNFTcontractaddress(String(NFTobj.tokenAddress));
+      setNFTtokenID(NFTobj.tokenID);
+      senfturi(NFTobj.tokenURI);
+    } else {
+      setNFTcontractaddress(NFTobj?.contract.address);
       setNFTtokenID(NFTobj?.tokenId);
-      setNFTname(NFTobj?.contract?.name)
-      setNFTsumbol(NFTobj?.contract?.symbol)
+      setNFTname(NFTobj?.contract?.name);
+      setNFTsumbol(NFTobj?.contract?.symbol);
     }
-
-  },[])
-
+  }, []);
 
   function formatcontractaddress(addr) {
     return addr.substring(0, 4) + "...." + addr.slice(-4);
@@ -83,39 +79,36 @@ function NftCard(props) {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
   function getcontractaddress() {
-   
-      if (chain.id === 11155111) {
-        setcontractaddress((swapaddressethtestnet));
-      }
-      if (chain.id === 80001) {
-        setcontractaddress((swapaddresspolytestnet));
-      }
-      if(chain?.id==3141){
-        setcontractaddress((filmarketaddress))
-      }
-      // setcorrectcntaddress(true);
-    
-    delay(1000).then(() => {setcorrectcntaddress(true);});
+    if (chain.id === 11155111) {
+      setcontractaddress(swapaddressethtestnet);
+    }
+    if (chain.id === 80001) {
+      setcontractaddress(swapaddresspolytestnet);
+    }
+    if (chain?.id == 3141) {
+      setcontractaddress(filmarketaddress);
+    }
+    // setcorrectcntaddress(true);
+
+    delay(1000).then(() => {
+      setcorrectcntaddress(true);
+    });
   }
 
   const { data } = useContractRead({
     address: contractaddress,
     abi: abi,
     functionName: "isApprovedfunc",
-    args: [
-      (NFTcontractaddress),
-      parseInt(NFTtokenID),
-    ],
+    args: [NFTcontractaddress, parseInt(NFTtokenID)],
     chainId: chain?.id,
     enabled: Boolean(correctcntaddress),
     onSuccess(data) {
       setapproved(data);
     },
     onError(err) {
-      setapproved(false)
+      setapproved(false);
     },
   });
-
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
@@ -124,13 +117,8 @@ function NftCard(props) {
     address: contractaddress,
     abi: abi,
     functionName: "createSwap",
-    args: [
-      [(NFTcontractaddress)],
-      [NFTtokenID],
-      description,
-    ],
+    args: [[NFTcontractaddress], [NFTtokenID], description],
     enabled: Boolean(correctcntaddress),
-    
   });
   const { write: createswapwrite } = useContractWrite(createswapconfig);
 
@@ -157,18 +145,12 @@ function NftCard(props) {
     getcontractaddress();
   }, [chain]);
 
-
   const { config: offerswapConfig } = usePrepareContractWrite({
     address: contractaddress,
     abi: abi,
     functionName: "proposeOffer",
-    args: [
-      swapid,
-      [(NFTcontractaddress)],
-      [NFTtokenID],
-    ],
+    args: [swapid, [NFTcontractaddress], [NFTtokenID]],
     enabled: Boolean(swapid !== undefined && correctcntaddress),
-    
   });
   const { write: offerswapwrite } = useContractWrite(offerswapConfig);
 
@@ -201,16 +183,19 @@ function NftCard(props) {
           pr={discoverpage ? "15%" : ""}
           py={discoverpage ? "2%" : ""}
           src={
-            filNFT?(NFTURI ||img_error):(NFTobj?.media[0]?.thumbnail ||
-            NFTobj?.media[0]?.gateway ||
-            NFTobj?.tokenUri?.gateway ||img_error)
+            filNFT
+              ? NFTURI || img_error
+              : NFTobj?.media[0]?.thumbnail ||
+                NFTobj?.media[0]?.gateway ||
+                NFTobj?.tokenUri?.gateway ||
+                img_error
           }
           alt={"NFT image"}
         />
         <Box px="6" pt="2" justifyContent="space-evenly">
           <Box display="flex" justifyContent="space-between">
             <Badge borderRadius="full" px="2" colorScheme="orange">
-              {filNFT?(1): (NFTobj?.balance)}
+              {filNFT ? 1 : NFTobj?.balance}
             </Badge>
             <Box
               color="gray.500"
@@ -220,8 +205,7 @@ function NftCard(props) {
               textTransform="uppercase"
               ml="2"
             >
-              {formatcontractaddress(NFTcontractaddress)} &bull; #
-              {NFTtokenID}
+              {formatcontractaddress(NFTcontractaddress)} &bull; #{NFTtokenID}
             </Box>
           </Box>
           <Box
@@ -234,8 +218,7 @@ function NftCard(props) {
             fontSize={discoverpage ? "xs" : ""}
             my={discoverpage ? "2" : "5"}
           >
-            {NFTname || "Name"} &bull;{" "}
-            {NFTsumbol || "Symbol"}
+            {NFTname || "Name"} &bull; {NFTsumbol || "Symbol"}
           </Box>
           <Flex direction="column" justify="center">
             <Button

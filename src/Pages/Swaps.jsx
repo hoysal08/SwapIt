@@ -13,7 +13,6 @@ import SwapCard from "../Components/SwapCard";
 import NoNfts from "../Components/NoNfts";
 
 function Swaps() {
-
   const { chain } = useNetwork();
   const { address } = useAccount();
   const { data: signer } = useSigner();
@@ -22,10 +21,9 @@ function Swaps() {
   const [openswapcount, setopenswapcount] = useState();
   const [openswapnft, setopenswapnft] = useState([]);
   const [offeredswaps, setofferedswaps] = useState(new Map());
-  const[keyarray, setkeyarray] = useState([])
-  const[valuesarr, setvaluesarr] = useState([]);
-  const[isitfilcoin,setisitfilcoin]=useState(false);
-
+  const [keyarray, setkeyarray] = useState([]);
+  const [valuesarr, setvaluesarr] = useState([]);
+  const [isitfilcoin, setisitfilcoin] = useState(false);
 
   const { data } = useContractRead({
     address: ethers.utils.getAddress(contractaddress),
@@ -49,7 +47,6 @@ function Swaps() {
       }
     }
     setopenswapnft(res);
-    console.log(res)
   }
 
   function getuseroffers() {
@@ -76,25 +73,23 @@ function Swaps() {
         ...res[swapId],
         tokenId: (await contract.getOSwapTokenId(swapId, 0)).toNumber(),
       };
-       offeredswaps.set(swapId, res[swapId]);
-      setofferedswaps(offeredswaps.set(swapId,res[swapId]))
+      offeredswaps.set(swapId, res[swapId]);
+      setofferedswaps(offeredswaps.set(swapId, res[swapId]));
     } catch (err) {
       console.log("No offers exist for swap  :" + i);
     }
   }
 
-  function connvertintoarrs(){
-    console.log(openswapcount)
-    if(valuesarr.length<openswapcount && keyarray.length<openswapcount){
-          offeredswaps.forEach((value,key)=>{
-             if(keyarray.indexOf(key)===-1){
-              setkeyarray(keyarray=>[...keyarray,key]);
-              setvaluesarr(valuesarr=>[...valuesarr,value]);
-             }
-    })
+  function connvertintoarrs() {
+    if (valuesarr.length < openswapcount && keyarray.length < openswapcount) {
+      offeredswaps.forEach((value, key) => {
+        if (keyarray.indexOf(key) === -1) {
+          setkeyarray((keyarray) => [...keyarray, key]);
+          setvaluesarr((valuesarr) => [...valuesarr, value]);
+        }
+      });
     }
   }
-
 
   function getcontractaddress() {
     if (chain?.id === 11155111) {
@@ -103,9 +98,9 @@ function Swaps() {
     if (chain?.id === 80001) {
       setcontractaddress(ethers.utils.getAddress(swapaddresspolytestnet));
     }
-    if(chain?.id===3141){
-      setisitfilcoin(true)
-      setcontractaddress(ethers.utils.getAddress(filmarketaddress))
+    if (chain?.id === 3141) {
+      setisitfilcoin(true);
+      setcontractaddress(ethers.utils.getAddress(filmarketaddress));
     }
     setcorrectcntaddres(true);
   }
@@ -123,33 +118,33 @@ function Swaps() {
   }, [openswapnft]);
 
   useEffect(() => {
-    connvertintoarrs()
+    connvertintoarrs();
   }, [offeredswaps]);
 
-
-  useEffect(()=>{
-    if(keyarray.length<openswapcount){
-      connvertintoarrs()
+  useEffect(() => {
+    if (keyarray.length < openswapcount) {
+      connvertintoarrs();
     }
-  },[keyarray])
+  }, [keyarray]);
 
- connvertintoarrs()
+  connvertintoarrs();
 
   return (
-
     <div>
-      <Box backgroundColor="#ECC9EE" pt="2%" h={valuesarr.length>1?"100%":"100vh"}>
-        {
-          valuesarr.length>0 ?
-          
-         (keyarray.map((val,index)=>{
-           return (
-           <SwapCard key={index} swapId={val} NFTobj={valuesarr[index]}/>
-           )
-           }))
-           :
-           <NoNfts text="You  Don't have any Open-Swaps"/>
-        }
+      <Box
+        backgroundColor="#ECC9EE"
+        pt="2%"
+        h={valuesarr.length > 1 ? "100%" : "100vh"}
+      >
+        {valuesarr.length > 0 ? (
+          keyarray.map((val, index) => {
+            return (
+              <SwapCard key={index} swapId={val} NFTobj={valuesarr[index]} />
+            );
+          })
+        ) : (
+          <NoNfts text="You  Don't have any Open-Swaps" />
+        )}
       </Box>
     </div>
   );

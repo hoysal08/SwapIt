@@ -5,8 +5,8 @@ import { Box, Button } from "@chakra-ui/react";
 import axios from "axios";
 import { useAccount } from "wagmi";
 
-function Huddlecomp({roomID}) {
-  const{address}=useAccount();
+function Huddlecomp({ roomID }) {
+  const { address } = useAccount();
 
   const iframeConfig = {
     roomUrl: `https://iframe.huddle01.com/${roomID}`,

@@ -2,7 +2,7 @@ import React from "react";
 import GetSwap from "./GetSwap";
 import { Flex } from "@chakra-ui/react";
 
-function GetSwapHolder({ props,fil }) {
+function GetSwapHolder({ props, fil }) {
   return (
     <div>
       <Flex direction="row" justify="space-evenly" m="15">
