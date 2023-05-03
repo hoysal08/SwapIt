@@ -234,8 +234,8 @@ function NftCard(props) {
             fontSize={discoverpage ? "xs" : ""}
             my={discoverpage ? "2" : "5"}
           >
-            {NFTname || "Untitled"} &bull;{" "}
-            {NFTsumbol || "Untitled"}
+            {NFTname || "Name"} &bull;{" "}
+            {NFTsumbol || "Symbol"}
           </Box>
           <Flex direction="column" justify="center">
             <Button

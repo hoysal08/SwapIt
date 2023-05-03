@@ -176,7 +176,7 @@ function GetSwap({props,fil}) {
           noOfLines={1}
           color='gray.500'
         >
-          {NftMetadata?.contract?.name || "Untitled" } &bull; {NftMetadata?.contract?.symbol || "Untitled" }
+          {NftMetadata?.contract?.name || "Name" } &bull; {NftMetadata?.contract?.symbol || "Symbol" }
         </Box>
         <Flex direction="column"  >
         <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF" onClick={onOpen}>Offer-Swap</Button>

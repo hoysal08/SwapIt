@@ -39,7 +39,7 @@ function nftcarddiscover({NFTobj}) {
           noOfLines={1}
           color='gray.500'
         >
-          {NFTobj?.contract?.name || "Untitled" } &bull; {NFTobj?.contract?.symbol || "Untitled" }
+          {NFTobj?.contract?.name || "Name" } &bull; {NFTobj?.contract?.symbol || "Symbol" }
         </Box>
         <Flex direction="column"  >
         <Button my="3%" backgroundColor="#191825" color="#E384FF" variant="outline" colorScheme="#E384FF">Swap</Button>
