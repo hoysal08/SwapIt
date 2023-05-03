@@ -1,7 +1,8 @@
-import { Flex, Grid, Box, Text } from "@chakra-ui/react";
+import { Flex, Grid, Box, Text, Image, Spacer } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../Assets/logo_swapit.png"
 
 function NavBar() {
   const navigate = useNavigate();
@@ -16,10 +17,16 @@ function NavBar() {
         align="center"
         justify="space-between"
       >
-        <Box>
+        <Box onClick={() => {
+                navigate("/");
+              }}>
+          <Flex direction="row" justify={"flex-start"} _hover={{ color: "#E384CF", cursor: "pointer" }}>
+            <Image w="40px" h="40px" src={logo} mr="10px"/>
           <Text color="#E384FF" as="samp" fontSize="2xl">
             SwapIt
-          </Text>
+          </Text> 
+          </Flex>
+         
         </Box>
         <Box w="40vw">
           <Flex direction="row" align="center" justifyContent="space-evenly">
