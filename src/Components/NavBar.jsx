@@ -23,7 +23,7 @@ function NavBar() {
           <Flex direction="row" justify={"flex-start"} _hover={{ color: "#E384CF", cursor: "pointer" }}>
             <Image w="40px" h="40px" src={logo} mr="10px"/>
           <Text color="#E384FF" as="samp" fontSize="2xl">
-            SwapIt
+            TokenTalk
           </Text> 
           </Flex>
          
