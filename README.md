@@ -14,3 +14,5 @@ The two major problems that were tried to solve here -
 2. The current NFT marketplaces are built around trading NFTs and holding these NFTs in a third-party intermediary or escrow service.
 TokenTalk enables the NFT trades without, taking custody of NFTs into any escrow accounts.
 Swappable NFT marketplaces can help to promote price discovery and liquidity in the NFT market.
+
+ # [Check out the Video Demo here]("https://www.loom.com/share/50779520e24f44988f4d756e820bbe27")
