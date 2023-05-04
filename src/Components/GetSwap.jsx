@@ -132,7 +132,7 @@ function GetSwap({ props, fil }) {
         filnftabi,
         signer
       );
-      setnfturi(await contract.tokenURI(0));
+      setnfturi(await contract.tokenURI(nftokenId));
     }
   }
 
